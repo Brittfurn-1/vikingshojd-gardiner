@@ -159,7 +159,7 @@ textarea.copyout{width:100%;min-height:120px;font:12px/1.4 var(--sans);border:1p
 .buildlist li{display:flex;justify-content:space-between;gap:12px;font-size:14px}
 .buildlist li span:first-child{min-width:0}
 .compare{display:flex;flex-direction:column;gap:8px}
-.cmp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}
 .cmpcard{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;text-align:left;padding:6px;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
 .cmpcard[aria-pressed="true"]{border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
 .cmpcard:hover{background:var(--hover)}
@@ -410,8 +410,7 @@ function compareSet(r,s){
     ...[cc,...['02','05','08','10'].filter(x=>x!==cc)].slice(0,3).map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Nótt '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
     {s:{...base,main:'verona',color:vc,laurie:true}, view:'sheer', title:'Freja + Vidar', sub:'Rekommenderas · skydd mot insyn', tag:'Rekommenderad'},
-    {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name, tag:'Förslag'},
-    {s:{...base,main:'carina',color:cc,laurie:false}, view:'closed', title:'Nótt', sub:colorOf('carina',cc).name, tag:'Mörkläggande'}
+    {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name, tag:'Förslag'}
   ];
   return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && c.s.laurie===s.laurie && c.view===state.view}));
 }
@@ -504,7 +503,7 @@ function renderDetail(){
   if(!s.laurie && state.view==='sheer') state.view='open';
   state.stage='rum';
   const views=[['open','Öppna'],...(s.laurie?[['sheer','Skira dragna']]:[]),['closed','Dragna']];
-  const fabs = r.sov ? ['carina'] : ['verona','carina'];
+  const fabs = r.sov ? ['carina'] : ['verona'];
   const rum = state.stage==='rum';
   $('#detail').innerHTML=`
     <div class="head"><div><span class="label">${r.plan}</span><h2>${r.name}${r.part?' – '+r.part:''}</h2>${r.ws.length>1?'<p class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster: '+r.ws.map(w=>w.part).join(', ')+'</p>':''}</div><span class="meta">${r.ws.length>1?r.ws.length+' fönster · skena totalt '+r.railTotal+' cm':r.win+' · skena '+r.L+' cm'}</span></div>
