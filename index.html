@@ -179,6 +179,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .embed .wrap{padding-block:8px 24px}
 .embed .grid{grid-template-columns:240px minmax(0,1fr)}
 @media (max-width:767px){.embed .grid{grid-template-columns:minmax(0,1fr)}}
+[hidden]{display:none!important}
 .intro{display:flex;flex-direction:column;gap:48px;padding-block:8px 24px}
 .ihero{position:relative;border-radius:8px;overflow:hidden;min-height:520px;display:flex;align-items:flex-end}
 .ihero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -271,7 +272,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
   <header class="top">
     <div class="brand">
       <img src="img/logo.svg" alt="Brittfurn">
-      <span class="label">Vikingshöjd-kollektionen · av Brittfurn · testversion</span>
+      <span class="label">Vikingshöjd-kollektionen · av Brittfurn</span>
       <h1>Välj gardiner <em>rum för rum</em></h1>
       <p class="lede">En egen gardinkollektion som Brittfurn har tagit fram för Vikingshöjd, med namn efter asagudarna. Vi har noga valt ut tyger som går hand i hand med husens arkitektur, i genomtänkta material som är långsiktiga och hållbara. Gardinerna sys efter måtten i ditt hus, med wave-veck på takmonterad skena. Välj tyg och färg för varje fönster och se direkt hur det blir. Måttagning, sömnad och montering ingår.</p>
     </div>
@@ -663,7 +664,6 @@ function renderSum(){
     ${items?'<ul class="sumlist">'+items+'</ul>':'<p class="note">Inga rum valda ännu. Klicka på ett rum så väljs standardgardinen, och priset byggs på här.</p>'}
     <div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
     <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår.</span>
-    <span class="prelim">Testversion · preliminära priser</span>
     <div class="actions"><button class="btn" id="copy">Kopiera sammanställning</button></div>
     <span class="copied" id="copied" aria-live="polite"></span>
     <p class="note">Skicka sammanställningen till Brittfurn, Sturegatan 20, Stockholm: <span class="sel">info@brittfurn.se</span>. Vi bekräftar valen efter måttagning på plats.</p>
