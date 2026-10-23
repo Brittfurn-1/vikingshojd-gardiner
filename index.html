@@ -488,7 +488,7 @@ function restoreStage(){
   if(state.stage==='rum'){ const cv=$('#envcv'); if(cv) paintCanvas(cv,sceneOf(r0),s); return; }
   const R=roomFor(r0,state.house); document.querySelectorAll('.stage .winsvg').forEach((el,i)=>{ el.innerHTML=svgRoom({...R,...R.ws[i]},s,state.view,false); });
 }
-const MILJO={verona:[0,1,2,3,4],carina:[0],laurie:[0,1,2]};
+const MILJO={verona:['verona-sv1','verona-sv2','verona-0','verona-1','verona-2','verona-3','verona-4'],carina:['carina-0'],laurie:['laurie-kenza','laurie-0','laurie-1','laurie-2']};
 function plusBtn(key,label){ const open=!!(state.more&&state.more[key]);
   return `<button class="plus" id="more-${key}" data-more="${key}" aria-expanded="${open}" aria-controls="morebox-${key}" aria-label="${open?'Dölj':'Visa'} ${label}"><span aria-hidden="true">${open?'−':'+'}</span></button>`; }
 function moreBox(key,html){ return (state.more&&state.more[key]) ? `<div class="morebox" id="morebox-${key}">${html}</div>` : ''; }
@@ -496,7 +496,7 @@ function fabricGallery(fab,code){
   const c=colorOf(fab,code);
   return `<div class="gal">
     <button class="galimg big" data-zoom="img/nara/${fab}-${code}.jpg" aria-label="Förstora närbild ${DATA[fab].name} ${c.name}"><img src="img/nara/${fab}-${code}.jpg" alt="Närbild ${DATA[fab].name} ${c.name}" loading="lazy"><span>Närbild · ${c.name}</span></button>
-    ${MILJO[fab].map(i=>`<button class="galimg" data-zoom="img/miljo/${fab}-${i}.jpg" aria-label="Förstora miljöbild ${i+1}"><img src="img/miljo/${fab}-${i}.jpg" alt="${DATA[fab].name} i ett verkligt rum" loading="lazy"></button>`).join('')}
+    ${MILJO[fab].map((i,n)=>`<button class="galimg" data-zoom="img/miljo/${i}.jpg" aria-label="Förstora miljöbild ${n+1}"><img src="img/miljo/${i}.jpg" alt="${DATA[fab].name} i ett verkligt rum" loading="lazy"></button>`).join('')}
   </div>`;
 }
 function renderDetail(){
@@ -605,7 +605,7 @@ function renderSum(){
 function renderColl(){
   const el=$('#coll'); if(!el || el.dataset.done) return; el.dataset.done='1';
   el.innerHTML=['verona','carina','laurie'].map(f=>`<article class="god">
-    <button class="godimg" data-zoom="img/nara/${f}-${DATA[f].def}.jpg" aria-label="Förstora ${DATA[f].name}"><img src="img/nara/${f}-${DATA[f].def}.jpg" alt="${DATA[f].name}" loading="lazy"></button>
+    <button class="godimg" data-zoom="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" aria-label="Förstora ${DATA[f].name}"><img src="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" alt="${DATA[f].name}" loading="lazy"></button>
     <div><span class="label">${f==='laurie'?'Innergardin':f==='carina'?'Sovrum':'Vardagsrum, kök och allrum'}</span><h3>${DATA[f].name}</h3><p>${DATA[f].myth}</p><small>${DATA[f].colors.length} färger · ${DATA[f].desc}</small></div>
   </article>`).join('');
 }
