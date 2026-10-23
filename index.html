@@ -50,7 +50,8 @@ h3{font-family:var(--serif);font-weight:500;font-size:20px;margin:0}
 .room:hover{background:var(--hover)}
 .room[aria-current="true"]{background:var(--surface);border-color:var(--line)}
 .room .th{width:72px;height:50px;border-radius:3px;overflow:hidden;background:var(--wall)}
-.room .th svg,.room .th canvas{width:100%;height:100%;display:block}
+.room .th{min-width:0;max-width:100%}
+.room .th svg,.room .th canvas{width:100%;height:100%;display:block;max-width:100%;object-fit:cover}
 .thcv{opacity:.5;transition:opacity .2s}.thcv.ready{opacity:1}
 .room b{display:block;font-weight:500;font-size:14px}
 .room small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -186,7 +187,9 @@ p.allwin{margin:4px 0 0;font-size:14px}
   .rooms{position:static;flex-direction:row;overflow-x:auto;gap:14px;padding-bottom:6px;scroll-snap-type:x proximity}
   .plan{flex:0 0 auto}
   .plan .rlist{display:flex;gap:6px}
-  .room{grid-template-columns:1fr;width:132px;scroll-snap-align:start}
+  .room{grid-template-columns:minmax(0,1fr);width:150px;flex:0 0 150px;scroll-snap-align:start;align-content:start}
+  .room > span{min-width:0}
+  .room small,.room b{white-space:normal;overflow-wrap:anywhere}
   .swatches{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
   .room .th{width:100%;height:70px}
   .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:5;justify-content:space-between;align-items:center;gap:12px;
