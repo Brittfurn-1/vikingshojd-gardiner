@@ -179,6 +179,37 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .embed .wrap{padding-block:8px 24px}
 .embed .grid{grid-template-columns:240px minmax(0,1fr)}
 @media (max-width:767px){.embed .grid{grid-template-columns:minmax(0,1fr)}}
+.intro{display:flex;flex-direction:column;gap:48px;padding-block:8px 24px}
+.ihero{position:relative;border-radius:8px;overflow:hidden;min-height:520px;display:flex;align-items:flex-end}
+.ihero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ihero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,0) 30%,rgba(20,18,15,.72) 100%)}
+.ihero-txt{position:relative;z-index:1;padding:40px;max-width:640px;color:#fff;display:flex;flex-direction:column;gap:14px}
+.ilogo{height:16px;width:auto;align-self:flex-start;filter:invert(1)}
+.ikicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.ihero h1{color:#fff;font-size:clamp(34px,5vw,58px)}
+.ihero p{margin:0;font-size:16px;line-height:1.6;max-width:56ch}
+.ibtn{align-self:flex-start;background:#fff;color:#1a1a1a;border-color:#fff;padding:14px 22px}
+.iwhy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+.iwhy div{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--ink);padding-top:14px}
+.iwhy b{font-family:var(--serif);font-weight:500;font-size:21px}
+.iwhy span{color:var(--muted);font-size:14px;line-height:1.6}
+.igods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.igods article{display:flex;flex-direction:column;gap:14px}
+.igods img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:6px;background:var(--wall)}
+.igods h2{font-size:34px}
+.igods p{margin:4px 0;font-size:15px;line-height:1.6}
+.igods small{color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.igods .ikicker{color:var(--accent);opacity:1}
+.isteps{display:flex;flex-direction:column;gap:20px;padding:32px;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.isteps ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;counter-reset:s}
+.isteps li{display:flex;flex-direction:column;gap:6px;counter-increment:s}
+.isteps li::before{content:counter(s);font-family:var(--serif);font-size:28px;color:var(--accent)}
+.isteps b{font-weight:500}
+.isteps span{color:var(--muted);font-size:14px;line-height:1.55}
+.isteps .ibtn{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.backintro{align-self:center}
+@media (max-width:900px){ .iwhy,.igods{grid-template-columns:minmax(0,1fr)} .isteps ol{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .igods img{aspect-ratio:4/3} }
+@media (max-width:767px){ .ihero{min-height:560px} .ihero-txt{padding:24px} .isteps{padding:20px} .isteps ol{grid-template-columns:minmax(0,1fr)} }
 .mobilebar{display:none}
 .prelim{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:3px 8px;border-radius:2px}
 @media (max-width:1199px){
@@ -204,6 +235,37 @@ p.allwin{margin:4px 0 0;font-size:14px}
 </style>
 
 <div class="wrap">
+<section id="intro" class="intro" aria-label="Vikingshöjd-kollektionen">
+  <div class="ihero">
+    <img src="img/miljo/verona-sv2.jpg" alt="Freja i ett ljust hem med stora fönster mot grönska">
+    <div class="ihero-txt">
+      <img class="ilogo" src="img/logo.svg" alt="Brittfurn">
+      <span class="ikicker">Vikingshöjd-kollektionen</span>
+      <h1>Gardiner skapade för<br><em>husen i Vikingshöjd</em></h1>
+      <p>Stora fönster, högt i tak och skogen precis utanför. Vi har tagit fram en egen gardinkollektion som går hand i hand med husens arkitektur: mjukt ljus på dagen, lugn och mörker på natten.</p>
+      <button class="btn ibtn" id="intro-go">Utforska gardiner för ditt hem</button>
+    </div>
+  </div>
+  <div class="iwhy">
+    <div><b>Måttsytt för just ditt hus</b><span>Varje gardin sys efter fönstren i din planlösning, med mjuka wave-veck som faller jämnt från tak till golv.</span></div>
+    <div><b>Skenan dikt mot taket</b><span>En slimmad takskena går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Det får rummet att kännas högre.</span></div>
+    <div><b>Tyger som håller</b><span>Noga utvalda, flamskyddade och mörkläggande kvaliteter i genomtänkta material, valda för att vara vackra i många år.</span></div>
+  </div>
+  <div class="igods">
+    <article><img src="img/miljo/verona-sv1.jpg" alt="Freja" loading="lazy"><div><span class="ikicker">Vardagsrum &amp; kök</span><h2>Freja</h2><p>Kärlekens och skönhetens gudinna. Vår mest eleganta gardin, med linnekaraktär och ett mjukt, tungt fall som ramar in de stora fönstren.</p><small>35 färger · flamskyddad</small></div></article>
+    <article><img src="img/miljo/laurie-kenza.jpg" alt="Vidar" loading="lazy"><div><span class="ikicker">Tillval · insynsskydd</span><h2>Vidar</h2><p>Den tystlåtne asen. En skir innergardin som släpper in dagsljuset men skyddar mot insyn. Tillsammans med Freja blir fönstret komplett.</p><small>24 färger · flamskyddad</small></div></article>
+    <article><img src="img/miljo/carina-0.jpg" alt="Nótt" loading="lazy"><div><span class="ikicker">Sovrum</span><h2>Nótt</h2><p>Nattens gudinna. Helt mörkläggande utan foder, för ostörd sömn även under ljusa sommarnätter.</p><small>11 färger · mörkläggande</small></div></article>
+  </div>
+  <div class="isteps">
+    <h2>Så går det till</h2>
+    <ol><li><b>Välj rum</b><span>Klicka på rummen i ditt hus. Freja, eller Nótt i sovrummen, väljs som standard.</span></li>
+    <li><b>Lägg till det du vill ha</b><span>Vidar för insynsskydd, ett broderat band och skenans finish. Priset byggs på direkt.</span></li>
+    <li><b>Se det i ditt hem</b><span>Varje val visas i Vikingshöjds egna rum, i den färg du väljer.</span></li>
+    <li><b>Vi gör resten</b><span>Vi mäter upp på plats, syr i vår ateljé och monterar. Allt ingår i priset.</span></li></ol>
+    <button class="btn ibtn" id="intro-go2">Välj gardiner rum för rum</button>
+  </div>
+</section>
+<div id="app" class="appwrap">
   <header class="top">
     <div class="brand">
       <img src="img/logo.svg" alt="Brittfurn">
@@ -212,6 +274,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
       <p class="lede">En egen gardinkollektion som Brittfurn har tagit fram för Vikingshöjd, med namn efter asagudarna. Vi har noga valt ut tyger som går hand i hand med husens arkitektur, i genomtänkta material som är långsiktiga och hållbara. Gardinerna sys efter måtten i ditt hus, med wave-veck på takmonterad skena. Välj tyg och färg för varje fönster och se direkt hur det blir. Måttagning, sömnad och montering ingår.</p>
     </div>
     <div class="house" role="group" aria-label="Hustyp" id="house"></div>
+    <button class="btn ghost backintro" id="back-intro">Om kollektionen</button>
   </header>
   <section class="coll" aria-label="Kollektionen" id="coll"></section>
 
@@ -220,6 +283,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
     <main class="detail" id="detail"></main>
     <aside class="sum" id="sum" aria-label="Din sammanställning"></aside>
   </div>
+</div><!-- /app -->
 </div>
 <div class="mobilebar" id="mobilebar"></div>
 <div id="zoom" class="zoom" hidden role="dialog" aria-label="Förstorad bild"><button id="zoom-close" class="btn">Stäng</button><img alt="Förstorad bild"></div>
@@ -608,7 +672,8 @@ function renderColl(){
     <div><span class="label">${f==='laurie'?'Innergardin':f==='carina'?'Sovrum':'Vardagsrum, kök och allrum'}</span><h3>${DATA[f].name}</h3><p>${DATA[f].myth}</p><small>${DATA[f].colors.length} färger · ${DATA[f].desc}</small></div>
   </article>`).join('');
 }
-function render(){ uid=0; ensureHouse(); renderColl(); renderHouse(); renderRooms(); renderDetail(); renderSum(); save(); if(state.stage==='rum') paintAll(); paintThumbs(); postToPortal(); }
+function applyIntro(){ const show=!state.started; const i=$('#intro'), a=$('#app'); if(i) i.hidden=!show; if(a) a.hidden=show; const mb=$('#mobilebar'); if(mb) mb.style.visibility=show?'hidden':''; }
+function render(){ uid=0; ensureHouse(); applyIntro(); renderColl(); renderHouse(); renderRooms(); renderDetail(); renderSum(); save(); if(state.stage==='rum') paintAll(); paintThumbs(); postToPortal(); }
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
@@ -618,6 +683,8 @@ document.addEventListener('click',e=>{
   if(b.dataset.band){ s.bcolor=b.dataset.band; s.band=true; state.view='closed'; return render(); }
   if(b.id==='use-reco-band'){ s.bcolor=b.dataset.code; s.band=true; return render(); }
   if(b.id==='use-reco-sheer'){ s.lcolor=b.dataset.code; s.laurie=true; return render(); }
+  if(b.id==='intro-go'||b.id==='intro-go2'){ state.started=true; render(); window.scrollTo({top:0}); return; }
+  if(b.id==='back-intro'){ state.started=false; render(); window.scrollTo({top:0}); return; }
   if(b.dataset.zoom){ const z=$('#zoom'); z.querySelector('img').src=b.dataset.zoom; z.hidden=false; z.querySelector('button').focus(); return; }
   if(b.id==='zoom-close'){ $('#zoom').hidden=true; return; }
   if(b.dataset.stage){ state.stage=b.dataset.stage; return render(); }
@@ -651,7 +718,7 @@ document.addEventListener('focusin',hov); document.addEventListener('focusout',o
 /* ---------- Inbäddning i Vikingshöjds tillvalsportal ---------- */
 const FILTER2HOUSE={'parhus-1-5-136-a':'A','parhus-1-5-131-b':'B','parhus-6-7-136-a':'C','parhus-6-7-131-b':'D','minivilla':'M'};
 const EMBED=(()=>{ try{ if(new URLSearchParams(location.search).has('embed')) return true; const ao=location.ancestorOrigins; if(ao) for(const o of ao) if(/vikingshojd.se$/.test(o)) return true; return /vikingshojd.se/.test(document.referrer||''); }catch(e){ return false; } })();
-if(EMBED){ document.documentElement.classList.add('embed'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
+if(EMBED){ state.started=true; document.documentElement.classList.add('embed'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
 window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
