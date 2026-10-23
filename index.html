@@ -393,7 +393,7 @@ function renderRooms(){
     const s=sel[r.id], c=colorOf(s.main,s.color);
     return `<button class="room" id="room-${r.id}" data-r="${r.id}" aria-current="${state.room===r.id}">
       <span class="th"><canvas class="thcv" data-r="${r.id}" aria-hidden="true"></canvas></span>
-      <span><b>${r.name}${r.part?' – '+r.part:''}</b>${r.ws.length>1?'<small class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster</small>':''}<small>${s.none?(s.laurie?'Vidar':'Inte valt'):DATA[s.main].name+' '+c.name}${s.laurie&&!s.none?' + Vidar':''}${s.band&&!s.none?' + band':''}</small><small class="pr">${priceOf(r,s)?fmt(priceOf(r,s)):'Från '+fmt(r.base)}</small></span>
+      <span><b>${r.name}${r.part?' – '+r.part:''}</b>${r.ws.length>1?'<small class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster</small>':''}<small>${s.none?(s.laurie?'Vidar':'Inte valt'):DATA[s.main].name+' '+c.name}${s.laurie&&!s.none?' + Vidar':''}${s.band&&!s.none?' + band':''}</small><small class="pr">${priceOf(r,s)?fmt(priceOf(r,s)):'Från '+fmt(r.base)}${r.ws.length>1?' · 4 fönster':''}</small></span>
     </button>`}).join('')}</div></div>`).join('');
 }
 function swatchGrid(fab, cur, kind){
@@ -515,8 +515,8 @@ function renderDetail(){
         ${rum?'':`<div class="seg" role="group" aria-label="Visa gardinerna">${views.map(([v,t])=>`<button id="view-${v}" data-v="${v}" aria-pressed="${state.view===v}">${t}</button>`).join('')}</div>`}
         <span class="note" id="stagenote">${rum?NOTE_RUM:NOTE_RIT}</span></div>
     </div>
-    ${(()=>{ const lines=[]; if(!s.none) lines.push([DATA[s.main].name+' '+colorOf(s.main,s.color).name+' · måttsydd gardin, takskena ('+railOf(s).name.toLowerCase()+'), montering', r.base]);
-        if(s.laurie) lines.push(['Vidar '+colorOf('laurie',s.lcolor).name+' · skir innergardin med egen dold skena', r.laurie]);
+    ${(()=>{ const lines=[]; if(!s.none) lines.push([DATA[s.main].name+' '+colorOf(s.main,s.color).name+' · måttsydd gardin, takskena ('+railOf(s).name.toLowerCase()+'), montering'+(r.ws.length>1?' · '+r.ws.length+' fönster':''), r.base]);
+        if(s.laurie) lines.push(['Vidar '+colorOf('laurie',s.lcolor).name+' · skir innergardin med egen dold skena'+(r.ws.length>1?' · '+r.ws.length+' fönster':''), r.laurie]);
         if(s.band&&!s.none) lines.push(['Bifrost-band '+bandOf(s).name+(r.ws.length>1?' · '+r.ws.length+' fönster':''), BAND_PRICE*r.ws.length]);
         const sum=lines.reduce((a,l)=>a+l[1],0);
         return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3><span class="pr">${fmt(sum)}</span></div>${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+fmt(l[1])+'</span></li>').join('')+'</ul>':'<p class="note">Inget valt ännu. Välj Freja (standard) eller Nótt nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
@@ -526,7 +526,7 @@ function renderDetail(){
         <span class="cth"><canvas class="cmpcv" data-i="${i}"></canvas></span><b>${c.title}</b><small>${c.sub}</small></button>`).join('')}</div>
     </section>
     <section class="opt">
-      <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${fmt(r.base)}</span></div>
+      <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${fmt(r.base)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
       <p class="note">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning.</p>
       ${r.ws.length>1?`<p class="note">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
       ${r.sov?`<p class="note">Sovrummen får Nótt, nattens gardin, som är mörkläggande utan foder, så rummet blir mörkt även sommarnätter. Sydd med wave-veck.</p>`:''}
@@ -549,7 +549,7 @@ function renderDetail(){
         ${plusBtn('laurie','vad tillvalet innebär')}
         <label class="check" for="chk-laurie"><input type="checkbox" id="chk-laurie" ${s.laurie?'checked':''}>
           <span class="t"><b>3. Tillval: skir innergardin Vidar</b><small>En elegant skir gardin som skyddar mot insyn men släpper in dagsljuset.</small></span>
-          <span class="p">+ ${fmt(r.laurie)}</span></label>
+          <span class="p">+ ${fmt(r.laurie)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></label>
       </div>
       ${moreBox('laurie',`<p>Vidar är en elegant innergardin som skyddar mot insyn. Den hänger på en egen skena närmast fönstret. Dra för den på dagen: dagsljuset silas mjukt in men ingen ser in. På kvällen drar du för huvudgardinen framför. Tyget är flamskyddat Trevira CS i 297 cm bredd, så gardinen sys utan skarvar.</p>
         <p class="note">I priset ingår tyg, sömnad med wave-veck, en extra takskena och montering.</p>${r.sov?'<p class="note">I sovrummet ger kombinationen det bästa av två världar: Vidar skyddar mot insyn på dagen, och Nótt mörklägger helt på natten.</p>':''}${fabricGallery('laurie',s.lcolor)}`)}
@@ -562,7 +562,7 @@ function renderDetail(){
         ${plusBtn('band','vad tillvalet innebär')}
         <label class="check" for="chk-band"><input type="checkbox" id="chk-band" ${s.band?'checked':''} ${s.none?'disabled':''}>
           <span class="t"><b>4. Tillval: broderat band Bifrost</b><small>Ett 53 mm brett broderat band längs framkanten på Freja eller Nótt. Finns i sex färger.</small></span>
-          <span class="p">+ ${fmt(BAND_PRICE*r.ws.length)}</span></label>
+          <span class="p">+ ${fmt(BAND_PRICE*r.ws.length)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></label>
       </div>
       ${(()=>{ const rc=recommend(s).band; if(!rc||!s.band) return ''; const on=(s.bcolor||'9900')===rc.b.code;
         return `<div class="reco"><span class="recoband" style="background-image:url('${rc.b.imgH}')"></span><span><b>Brittfurn Colour Match föreslår ${rc.b.name}</b><small>${rc.kat} till ${DATA[s.main].name} ${colorOf(s.main,s.color).name}.</small></span>${on&&s.band?'<span class="recook">Vald</span>':'<button class="btn ghost" id="use-reco-band" data-code="'+rc.b.code+'">Välj</button>'}</div>`; })()}
