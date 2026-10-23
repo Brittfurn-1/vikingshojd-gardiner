@@ -606,17 +606,11 @@ function renderDetail(){
       ${s.none?'':`<div class="morerow">${plusBtn('fabric','tyget i verkligheten')}<span><b>Se tyget i verkligheten</b><small>Närbild på ${DATA[s.main].name} ${colorOf(s.main,s.color).name} och bilder från riktiga hem.</small></span></div>
       ${moreBox('fabric',`${fabricGallery(s.main,s.color)}<p class="note">Fotografier av tyget. Vi lämnar gärna tygprov så att du kan se färgen i ditt eget ljus.</p>`)}`}
     </section>
-    <section class="opt">
-      <div class="opt-h"><h3>2. Takskena</h3><span class="pr note">Ingår</span></div>
-      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Slimmad takskena i aluminium, ø 28 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. En skena ingår${r.sov?'':'; väljer du till Vidar monteras en andra, dold skena innanför'}. Välj finish:</small></span></div>
-      <div class="rails" role="group" aria-label="Skenans finish">${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'58')===x.code}"><span style="background-image:url('${x.img}')"></span><small>${x.name}</small></button>`).join('')}</div>
-      ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>${railOf(s).name}</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med en slät ändknopp. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
-    </section>
     ${r.sov?'':`<section class="opt">
       <div class="morerow">
         ${plusBtn('laurie','vad tillvalet innebär')}
         <label class="check" for="chk-laurie"><input type="checkbox" id="chk-laurie" ${s.laurie?'checked':''}>
-          <span class="t"><b>3. Tillval: skir innergardin Vidar</b><small>En elegant skir gardin som skyddar mot insyn men släpper in dagsljuset.</small></span>
+          <span class="t"><b>2. Tillval: skir innergardin Vidar</b><small>En elegant skir gardin som skyddar mot insyn men släpper in dagsljuset.</small></span>
           <span class="p">+ ${fmt(r.laurie)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></label>
       </div>
       ${moreBox('laurie',`<p>Vidar är en elegant innergardin som skyddar mot insyn. Den hänger på en egen skena närmast fönstret. Dra för den på dagen: dagsljuset silas mjukt in men ingen ser in. På kvällen drar du för huvudgardinen framför. Tyget är flamskyddat Trevira CS i 297 cm bredd, så gardinen sys utan skarvar.</p>
@@ -629,7 +623,7 @@ function renderDetail(){
       <div class="morerow">
         ${plusBtn('band','vad tillvalet innebär')}
         <label class="check" for="chk-band"><input type="checkbox" id="chk-band" ${s.band?'checked':''} ${s.none?'disabled':''}>
-          <span class="t"><b>${r.sov?'3':'4'}. Tillval: broderat band Bifrost</b><small>Ett 53 mm brett broderat band längs framkanten på Freja eller Nótt. Finns i sex färger.</small></span>
+          <span class="t"><b>${r.sov?'2':'3'}. Tillval: broderat band Bifrost</b><small>Ett 53 mm brett broderat band längs framkanten på Freja eller Nótt. Finns i sex färger.</small></span>
           <span class="p">+ ${fmt(BAND_PRICE*r.ws.length)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></label>
       </div>
       ${(()=>{ const rc=recommend(s).band; if(!rc||!s.band) return ''; const on=(s.bcolor||'9900')===rc.b.code;
@@ -637,6 +631,12 @@ function renderDetail(){
       ${s.band?'':'<!--'}<div class="bands" role="group" aria-label="Bandfärg">${DATA.bands.map(b=>`<button class="bandsw" id="band-${b.code}" data-band="${b.code}" aria-pressed="${s.band&&(s.bcolor||'9900')===b.code}"><span style="background-image:url('${b.imgH}')"></span><small>${b.name}${recommend(s).band&&recommend(s).band.b.code===b.code?' · förslag':''}</small></button>`).join('')}</div>${s.band?'':'-->'}
       ${moreBox('band',`<p>Bandet sys på huvudgardinen, Freja eller Nótt, aldrig på den skira Vidar. Det sitter längs kanten där de två gardinerna möts, från skenan ner till golvet: ett band per gardin, två per fönster. Det ger gardinen en skräddarsydd ram och syns både när gardinen är dragen och när den är öppen. Mönstret är broderat på naturfärgad botten, och broderiet finns i sex färger.</p>
         <p class="note">I priset ingår två band à 280 cm och påsyddnad per fönster${r.ws.length>1?' ('+r.ws.length+' fönster)':''}.</p>`)}
+    </section>
+    <section class="opt">
+      <div class="opt-h"><h3>${r.sov?'3':'4'}. Takskena</h3><span class="pr note">Ingår</span></div>
+      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Slimmad takskena i aluminium, ø 28 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. En skena ingår${r.sov?'':'; väljer du till Vidar monteras en andra, dold skena innanför'}. Välj finish:</small></span></div>
+      <div class="rails" role="group" aria-label="Skenans finish">${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'58')===x.code}"><span style="background-image:url('${x.img}')"></span><small>${x.name}</small></button>`).join('')}</div>
+      ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>${railOf(s).name}</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med en slät ändknopp. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
     </section>
     <div class="actions">
       <button class="btn ghost" id="apply-similar">Samma val i alla ${r.sov?'sovrum':'rum utom sovrum'}</button>
