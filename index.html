@@ -210,6 +210,8 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .backintro{align-self:center}
 @media (max-width:900px){ .iwhy,.igods{grid-template-columns:minmax(0,1fr)} .isteps ol{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .igods img{aspect-ratio:4/3} }
 @media (max-width:767px){ .ihero{min-height:560px} .ihero-txt{padding:24px} .isteps{padding:20px} .isteps ol{grid-template-columns:minmax(0,1fr)} }
+.swhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 0;font-family:var(--serif);font-size:19px;font-weight:500}
+.swhead span{font-family:inherit;font-size:14px;color:var(--muted);font-weight:400;align-self:flex-end}
 .mobilebar{display:none}
 .prelim{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:3px 8px;border-radius:2px}
 @media (max-width:1199px){
@@ -357,6 +359,9 @@ function cmScore(m,c,mode){ let p=0, kat='Mjuk kontrast';
   if(mode==='sheer'){ const d=c.L-m.L; p+= d>=8&&d<=45 ? 18 : (d>0 ? 8 : -12); if(c.C<=m.C+6) p+=8; if(c.C<8) p+=6; if(c.L<58) p-=25; if(m.fam!=='neutral'&&c.fam==='neutral'&&m.und===c.und){ p+=12; kat='Harmonisk kombination'; } }
   else { const d=Math.abs(m.L-c.L); p+= d>=30 ? 10 : d>=15 ? 5 : 0; if(m.fam==='neutral'&&c.fam==='neutral'&&d>=30){ p+=10; kat='Markerad accent'; } if(m.fam!=='neutral'&&m.fam===c.fam) p+=10; }
   return {p,kat}; }
+function sheerTop(s,n=3){ const mc=colorOf(s.main,s.color), m=cm(mc.lab);
+  return DATA.laurie.colors.map(c=>({c,...cmScore(m,cm(c.lab),'sheer'),d:Math.hypot(c.lab[1]-mc.lab[1],c.lab[2]-mc.lab[2])})).sort((x,y)=>y.p-x.p||(y.c.code===DATA.laurie.def)-(x.c.code===DATA.laurie.def)||x.d-y.d).slice(0,n); }
+const fitSheer=s=>{ const top=sheerTop(s).map(x=>x.c.code); if(!top.includes(s.lcolor)) s.lcolor=top[0]; };
 function recommend(s){ if(s.none) return {}; const m=cm(colorOf(s.main,s.color).lab);
   const band=DATA.bands.map(b=>({b,...cmScore(m,cm(b.lab),'band')})).sort((x,y)=>y.p-x.p)[0];
   const sheer=DATA.laurie.colors.map(c=>({c,...cmScore(m,cm(c.lab),'sheer')})).sort((x,y)=>y.p-x.p)[0];
@@ -460,8 +465,8 @@ function renderRooms(){
       <span><b>${r.name}${r.part?' – '+r.part:''}</b>${r.ws.length>1?'<small class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster</small>':''}<small>${s.none?(s.laurie?'Vidar':'Inte valt'):DATA[s.main].name+' '+c.name}${s.laurie&&!s.none?' + Vidar':''}${s.band&&!s.none?' + band':''}</small><small class="pr">${priceOf(r,s)?fmt(priceOf(r,s)):'Från '+fmt(r.base)}${r.ws.length>1?' · 4 fönster':''}</small></span>
     </button>`}).join('')}</div></div>`).join('');
 }
-function swatchGrid(fab, cur, kind){
-  return `<div class="swatches" role="group" aria-label="Färger ${DATA[fab].name}">${DATA[fab].colors.map(c=>`
+function swatchGrid(fab, cur, kind, list){
+  return `<p class="swhead">Färg på ${DATA[fab].name}${list?' · '+list.length+' rekommenderade':''}<span>Vald: ${colorOf(fab,cur).name}</span></p><div class="swatches" role="group" aria-label="Färger ${DATA[fab].name}">${(list||DATA[fab].colors).map(c=>`
     <button class="sw" id="sw-${kind}-${fab}-${c.code}" data-kind="${kind}" data-fab="${fab}" data-code="${c.code}" aria-pressed="${cur===c.code}" title="${DATA[fab].name} ${c.name}">
       <span class="img" style="background-image:url('${c.img}');background-color:${c.hex}"></span>
       <small>${c.name}</small></button>`).join('')}</div>`;
@@ -473,7 +478,7 @@ function compareSet(r,s){
   const list = r.sov ? [
     ...[cc,...['02','05','08','10'].filter(x=>x!==cc)].slice(0,3).map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Nótt '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
-    {s:{...base,main:'verona',color:vc,laurie:true,lcolor:s.laurie?s.lcolor:DATA.laurie.def}, view:'sheer', title:'Freja + Vidar', sub:'Dubbel uppsättning: Freja + skir Vidar, två skenor', tag:'Rekommenderad'},
+    {s:{...base,main:'verona',color:vc,laurie:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Freja + Vidar', sub:'Dubbel uppsättning: Freja + skir Vidar, två skenor', tag:'Rekommenderad'},
     {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name, tag:'Förslag'}
   ];
   return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && c.s.laurie===s.laurie && c.view===state.view}));
@@ -616,9 +621,9 @@ function renderDetail(){
       </div>
       ${moreBox('laurie',`<p>Vidar är en elegant innergardin som skyddar mot insyn. Den hänger på en egen skena närmast fönstret. Dra för den på dagen: dagsljuset silas mjukt in men ingen ser in. På kvällen drar du för huvudgardinen framför. Tyget är flamskyddat Trevira CS i 297 cm bredd, så gardinen sys utan skarvar.</p>
         <p class="note">I priset ingår tyg, sömnad med wave-veck, en extra takskena och montering.</p>${fabricGallery('laurie',s.lcolor)}`)}
-      ${(()=>{ const R=recommend(s), rc=R.sheer; if(!rc||!s.laurie) return ''; const on=s.lcolor===rc.c.code, cl=cm(rc.c.lab);
+      ${s.laurie&&!s.none?`<p class="note">Brittfurn Colour Match har valt ut tre färger på Vidar som passar ${DATA[s.main].name} ${colorOf(s.main,s.color).name}.</p>`+swatchGrid('laurie',s.lcolor,'laurie',sheerTop(s).map(x=>x.c)):''}
+      ${(()=>{ return ''; const R=recommend(s), rc=R.sheer; if(!rc||!s.laurie) return ''; const on=s.lcolor===rc.c.code, cl=cm(rc.c.lab);
         return `<div class="reco"><span class="recodot" style="background-image:url('${rc.c.img}');background-color:${rc.c.hex}"></span><span><b>Brittfurn Colour Match föreslår Vidar ${rc.c.name}</b><small>${rc.kat} till ${DATA[s.main].name} ${colorOf(s.main,s.color).name}: samma ${cl.und} underton${cl.L>R.m.L?' och en ljusare ton som låter dagsljuset flöda':''}.</small></span>${on&&s.laurie?'<span class="recook">Vald</span>':'<button class="btn ghost" id="use-reco-sheer" data-code="'+rc.c.code+'">Välj</button>'}</div>`; })()}
-      ${s.laurie?swatchGrid('laurie',s.lcolor,'laurie'):''}
     </section>`}
     <section class="opt">
       <div class="morerow">
@@ -695,8 +700,8 @@ document.addEventListener('click',e=>{
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
   if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
   if(b.dataset.cmp){ const r0=roomById(state.room), c=compareSet(r0,s)[+b.dataset.cmp];
-    Object.assign(s,{none:false,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); state.view=c.view; return render(); }
-  if(b.classList.contains('sw')){ if(b.dataset.kind==='main'){ s.color=b.dataset.code; state.view='closed'; } else { s.lcolor=b.dataset.code; state.view='sheer'; } return render(); }
+    Object.assign(s,{none:false,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; state.view=c.view; return render(); }
+  if(b.classList.contains('sw')){ if(b.dataset.kind==='main'){ s.color=b.dataset.code; if(s.laurie) fitSheer(s); state.view=s.laurie?'sheer':'closed'; } else { s.lcolor=b.dataset.code; state.view='sheer'; } return render(); }
   if(b.id==='apply-similar'){ const r=roomById(state.room); for(const x of roomsFor(state.house)) if(!!x.sov===!!r.sov) sel[x.id]={...s}; return render(); }
   if(b.id==='reset'){ state.sel[state.house]=defaults(state.house); return render(); }
   if(b.id==='m-sum'){ $('#sum').scrollIntoView({behavior:'smooth'}); return; }
@@ -707,7 +712,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{
   const s=state.sel[state.house][state.room];
-  if(e.target.id==='chk-laurie'){ s.laurie=e.target.checked; state.view=s.laurie?'sheer':'open'; render(); }
+  if(e.target.id==='chk-laurie'){ s.laurie=e.target.checked; if(s.laurie) fitSheer(s); state.view=s.laurie?'sheer':'open'; render(); }
   if(e.target.id==='chk-band'){ s.band=e.target.checked; state.view='closed'; render(); }
 });
 const hov=e=>{ const b=e.target.closest&&e.target.closest('.sw'); if(!b) return; previewStage(b.dataset.fab,b.dataset.code,b.dataset.kind); };
