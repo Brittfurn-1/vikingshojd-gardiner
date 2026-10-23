@@ -473,7 +473,7 @@ function compareSet(r,s){
   const list = r.sov ? [
     ...[cc,...['02','05','08','10'].filter(x=>x!==cc)].slice(0,3).map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Nótt '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
-    {s:{...base,main:'verona',color:vc,laurie:true}, view:'sheer', title:'Freja + Vidar', sub:'Rekommenderas · skydd mot insyn', tag:'Rekommenderad'},
+    {s:{...base,main:'verona',color:vc,laurie:true}, view:'sheer', title:'Freja + Vidar', sub:'Dubbel uppsättning: Freja + skir Vidar, två skenor', tag:'Rekommenderad'},
     {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name, tag:'Förslag'}
   ];
   return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && c.s.laurie===s.laurie && c.view===state.view}));
