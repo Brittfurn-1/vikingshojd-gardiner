@@ -240,19 +240,19 @@ const ROOMS = [
     {part:'Vardagsrum, gavel', win:'Fönster 280 × 240 cm', L:340, op:[{x:30,w:280,s:0,h:240}], base:14000, laurie:11500},
     {part:'Kök, gavel mot altan', win:'Altandörr 200 × 240 + fönster 120 × 240 cm', L:360, op:[{x:30,w:200,s:0,h:240,door:true},{x:230,w:120,s:0,h:240}], base:14100, laurie:11500},
     {part:'Kök, långsida', win:'Fönster 230 × 240 cm', L:270, op:[{x:12,w:230,s:0,h:240}], base:11700, laurie:9000}]},
-  {id:'sov3', houses:['A','B','C','D'], plan:'Nedre plan', name:{A:'Sovrum 3',B:'Sovrum 3',C:'Sovrum, nedre plan',D:'Sovrum, nedre plan'}, part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'sov3', houses:['A','B','C','D'], plan:'Nedre plan', name:{A:'Sovrum 3 · 10,0 m²',B:'Sovrum 3 · 10,0 m²',C:'Sovrum · 10,0 m²',D:'Sovrum · 8,0 m²'}, part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:'Fönster 140 × 150 cm', L:200, op:[{x:30,w:140,s:80,h:150}], base:13900, laurie:9000}]},
-  {id:'sov1', houses:['A','B'], plan:'Övre plan', name:'Sovrum 1', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'sov1', houses:['A','B'], plan:'Övre plan', name:'Sovrum 1 · 10,4 m²', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:{A:'Fönster 140 × 150 cm',B:'Fönster 140 × 180 cm'}, L:200, op:{A:[{x:30,w:140,s:80,h:150}],B:[{x:30,w:140,s:50,h:180}]}, base:13900, laurie:9000}]},
-  {id:'sov2', houses:['A','B'], plan:'Övre plan', name:'Sovrum 2', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'sov2', houses:['A','B'], plan:'Övre plan', name:'Sovrum 2 · 7,2 m²', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:'Fönster 170 × 150 cm', L:230, op:[{x:30,w:170,s:80,h:150}], base:13900, laurie:9000}]},
-  {id:'master', houses:['A','B'], plan:'Övre plan', name:'Master bedroom', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'master', houses:['A','B'], plan:'Övre plan', name:'Master bedroom · 13,8 m²', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:{A:'Fönster 290 × 180 + 100 × 180 cm',B:'Fönster 280 × 180 + 100 × 180 cm'}, L:{A:430,B:420}, op:{A:[{x:15,w:290,s:50,h:180},{x:305,w:100,s:50,h:180}],B:[{x:15,w:280,s:50,h:180},{x:295,w:100,s:50,h:180}]}, base:21300, laurie:14000}]},
-  {id:'o67s1', houses:['C','D'], plan:'Övre plan', name:'Sovrum 11,5 m²', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'o67s1', houses:['C','D'], plan:'Övre plan', name:'Master bedroom · 11,5 m²', part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:'Fönster ca 270 × 180 cm', L:330, op:[{x:30,w:270,s:50,h:180}], base:16300, laurie:11500}]},
-  {id:'o67s2', houses:['C','D'], plan:'Övre plan', name:{C:'Sovrum 10,4 m²',D:'Sovrum 9,1 m²'}, part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'o67s2', houses:['C','D'], plan:'Övre plan', name:{C:'Sovrum · 10,4 m²',D:'Sovrum · 9,1 m²'}, part:'', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:'Fönster ca 135 × 150 cm', L:200, op:[{x:32,w:135,s:80,h:150}], base:13900, laurie:9000}]},
-  {id:'o67s3', houses:['C','D'], plan:'Övre plan', name:'Sovrum 9,0 m²', part:'gavel', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
+  {id:'o67s3', houses:['C','D'], plan:'Övre plan', name:'Sovrum · 9,0 m²', part:'gavelfönster', sov:true, scenes:SOVSC, crop:CROP_SOV, windows:[
     {win:'Gavelfönster ca 120 × 240 cm', L:180, op:[{x:30,w:120,s:0,h:240}], base:13900, laurie:9000}]},
   {id:'allrum', houses:['A','B','C','D'], plan:'Övre plan', name:'Allrum', part:'', scenes:['allrum'], crop:[0,.05,1,.8], windows:[
     {win:{A:'Fönster 245 × 180 cm',B:'Fönster 245 × 180 cm',C:'Fönster ca 245 × 180 cm',D:'Fönster ca 230 × 180 cm'}, L:300, op:[{x:27,w:245,s:50,h:180}], base:11700, laurie:9000}]},
@@ -260,9 +260,9 @@ const ROOMS = [
     {win:'Fönster 125 × 240 cm', L:185, op:[{x:30,w:125,s:0,h:240}], base:11500, laurie:9000}]},
   {id:'mvvard', houses:['M'], plan:'Övre plan', name:'Vardagsrum & kök', part:'', scenes:['mv-vardagsrum'], crop:[.3,.08,1,.8], bandDefault:true, windows:[
     {win:'Fönster ca 315 × 150 cm', L:375, op:[{x:30,w:315,s:80,h:150}], base:16900, laurie:13500}]},
-  {id:'mvsov1', houses:['M'], plan:'Nedre plan', name:'Sovrum 12,4 m²', part:'', sov:true, scenes:['mv-sovrum'], crop:[.15,.1,.95,.85], windows:[
+  {id:'mvsov1', houses:['M'], plan:'Nedre plan', name:'Stort sovrum · 12,4 m²', part:'', sov:true, scenes:['mv-sovrum'], crop:[.15,.1,.95,.85], windows:[
     {win:'Fönster ca 245 × 150 cm', L:305, op:[{x:30,w:245,s:70,h:150}], base:15500, laurie:11000}]},
-  {id:'mvsov2', houses:['M'], plan:'Nedre plan', name:'Sovrum 6,4 m²', part:'', sov:true, scenes:['mv-sovrum'], crop:[.15,.1,.95,.85], windows:[
+  {id:'mvsov2', houses:['M'], plan:'Nedre plan', name:'Litet sovrum · 6,4 m²', part:'', sov:true, scenes:['mv-sovrum'], crop:[.15,.1,.95,.85], windows:[
     {win:'Fönster ca 70 × 120 cm', L:110, op:[{x:20,w:70,s:90,h:120}], base:8500, laurie:6000}]}
 ];
 const pick=(v,h)=> (v && typeof v==='object' && !Array.isArray(v) && ['A','B','C','D','M'].some(k=>k in v)) ? (v[h]??v.A??Object.values(v)[0]) : v;
