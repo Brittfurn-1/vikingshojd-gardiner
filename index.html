@@ -164,6 +164,10 @@ textarea.copyout{width:100%;min-height:120px;font:12px/1.4 var(--sans);border:1p
 .cmpcard[aria-pressed="true"]{border-color:var(--sel);box-shadow:inset 0 0 0 1px var(--sel)}
 .cmpcard:hover{background:var(--hover)}
 .cmpcard:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cmpcard{position:relative}
+.cmpcard.rec{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.cmptag{position:absolute;top:12px;left:12px;z-index:1;font-size:11px;letter-spacing:.08em;text-transform:uppercase;background:var(--surface);color:var(--ink);padding:3px 8px;border-radius:2px}
+.cmpcard.rec .cmptag{background:var(--accent);color:var(--accent-ink)}
 .cmpcard .cth{display:block;border-radius:3px;overflow:hidden;background:var(--wall)}
 .cmpcard .cth svg{display:block;width:100%;height:auto}
 .cmpcard .cth img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
@@ -405,9 +409,9 @@ function compareSet(r,s){
   const list = r.sov ? [
     ...[cc,...['02','05','08','10'].filter(x=>x!==cc)].slice(0,3).map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Nótt '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
-    {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name},
-    {s:{...base,main:'carina',color:cc,laurie:false}, view:'closed', title:'Nótt', sub:colorOf('carina',cc).name+', mörkläggande'},
-    {s:{...base,laurie:true}, view:'sheer', title:DATA[base.main].name+' + Vidar', sub:'Skir innergardin dragen'}
+    {s:{...base,main:'verona',color:vc,laurie:true}, view:'sheer', title:'Freja + Vidar', sub:'Rekommenderas · skydd mot insyn', tag:'Rekommenderad'},
+    {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Freja', sub:colorOf('verona',vc).name, tag:'Förslag'},
+    {s:{...base,main:'carina',color:cc,laurie:false}, view:'closed', title:'Nótt', sub:colorOf('carina',cc).name, tag:'Mörkläggande'}
   ];
   return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && c.s.laurie===s.laurie && c.view===state.view}));
 }
@@ -518,7 +522,7 @@ function renderDetail(){
         return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3><span class="pr">${fmt(sum)}</span></div>${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+fmt(l[1])+'</span></li>').join('')+'</ul>':'<p class="note">Inget valt ännu. Välj Freja (standard) eller Nótt nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
     <section class="compare" aria-label="Jämför tyger">
       <span class="label">Jämför i det här rummet</span>
-      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">
+      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
         <span class="cth"><canvas class="cmpcv" data-i="${i}"></canvas></span><b>${c.title}</b><small>${c.sub}</small></button>`).join('')}</div>
     </section>
     <section class="opt">
