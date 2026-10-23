@@ -254,7 +254,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
   <div class="igods">
     <article><img src="img/miljo/verona-sv1.jpg" alt="Freja" loading="lazy"><div><span class="ikicker">Vardagsrum &amp; kök</span><h2>Freja</h2><p>Kärlekens och skönhetens gudinna. Vår mest eleganta gardin, med linnekaraktär och ett mjukt, tungt fall som ramar in de stora fönstren.</p><small>35 färger · flamskyddad</small></div></article>
     <article><img src="img/miljo/laurie-kenza.jpg" alt="Vidar" loading="lazy"><div><span class="ikicker">Tillval · insynsskydd</span><h2>Vidar</h2><p>Den tystlåtne asen. En skir innergardin som släpper in dagsljuset men skyddar mot insyn. Tillsammans med Freja blir fönstret komplett.</p><small>24 färger · flamskyddad</small></div></article>
-    <article><img src="img/miljo/carina-0.jpg" alt="Nótt" loading="lazy"><div><span class="ikicker">Sovrum</span><h2>Nótt</h2><p>Nattens gudinna. Helt mörkläggande utan foder, för ostörd sömn även under ljusa sommarnätter.</p><small>11 färger · mörkläggande</small></div></article>
+    <article><img src="img/miljo/carina-nott.jpg" alt="Nótt" loading="lazy"><div><span class="ikicker">Sovrum</span><h2>Nótt</h2><p>Nattens gudinna. Helt mörkläggande utan foder, för ostörd sömn även under ljusa sommarnätter.</p><small>11 färger · mörkläggande</small></div></article>
   </div>
   <div class="isteps">
     <h2>Så går det till</h2>
@@ -551,7 +551,7 @@ function restoreStage(){
   if(state.stage==='rum'){ const cv=$('#envcv'); if(cv) paintCanvas(cv,sceneOf(r0),s); return; }
   const R=roomFor(r0,state.house); document.querySelectorAll('.stage .winsvg').forEach((el,i)=>{ el.innerHTML=svgRoom({...R,...R.ws[i]},s,state.view,false); });
 }
-const MILJO={verona:['verona-sv1','verona-sv2','verona-0','verona-1','verona-2','verona-3','verona-4'],carina:['carina-0'],laurie:['laurie-kenza','laurie-0','laurie-1','laurie-2']};
+const MILJO={verona:['verona-sv1','verona-sv2','verona-0','verona-1','verona-2','verona-3','verona-4'],carina:['carina-nott','carina-0'],laurie:['laurie-kenza','laurie-0','laurie-1','laurie-2']};
 function plusBtn(key,label){ const open=!!(state.more&&state.more[key]);
   return `<button class="plus" id="more-${key}" data-more="${key}" aria-expanded="${open}" aria-controls="morebox-${key}" aria-label="${open?'Dölj':'Visa'} ${label}"><span aria-hidden="true">${open?'−':'+'}</span></button>`; }
 function moreBox(key,html){ return (state.more&&state.more[key]) ? `<div class="morebox" id="morebox-${key}">${html}</div>` : ''; }
@@ -668,7 +668,7 @@ function renderSum(){
 function renderColl(){
   const el=$('#coll'); if(!el || el.dataset.done) return; el.dataset.done='1';
   el.innerHTML=['verona','carina','laurie'].map(f=>`<article class="god">
-    <button class="godimg" data-zoom="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" aria-label="Förstora ${DATA[f].name}"><img src="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" alt="${DATA[f].name}" loading="lazy"></button>
+    <button class="godimg" data-zoom="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg',carina:'img/miljo/carina-nott.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" aria-label="Förstora ${DATA[f].name}"><img src="${({verona:'img/miljo/verona-sv1.jpg',laurie:'img/miljo/laurie-kenza.jpg',carina:'img/miljo/carina-nott.jpg'})[f]||'img/nara/'+f+'-'+DATA[f].def+'.jpg'}" alt="${DATA[f].name}" loading="lazy"></button>
     <div><span class="label">${f==='laurie'?'Innergardin':f==='carina'?'Sovrum':'Vardagsrum, kök och allrum'}</span><h3>${DATA[f].name}</h3><p>${DATA[f].myth}</p><small>${DATA[f].colors.length} färger · ${DATA[f].desc}</small></div>
   </article>`).join('');
 }
