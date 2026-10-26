@@ -252,6 +252,8 @@ p.allwin{margin:4px 0 0;font-size:14px}
   .room small,.room b{white-space:normal;overflow-wrap:anywhere}
   .swatches{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
   .room .th{width:100%;height:70px}
+  .check{flex-wrap:wrap}
+  .check .p{flex-basis:100%;margin-left:30px;white-space:normal}
   .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:5;justify-content:space-between;align-items:center;gap:12px;
     padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--surface);border-top:1px solid var(--line)}
   .mobilebar .total{font-size:20px;gap:8px}
@@ -779,7 +781,7 @@ const FILTER2HOUSE={'parhus-1-5-136-a':'A','parhus-1-5-131-b':'B','parhus-6-7-13
 const SHOP=new URLSearchParams(location.search).has('shop');
 const EMBED=(()=>{ try{ if(SHOP) return false; if(new URLSearchParams(location.search).has('embed')) return true; const ao=location.ancestorOrigins; if(ao) for(const o of ao) if(/vikingshojd.se$/.test(o)) return true; return /vikingshojd.se/.test(document.referrer||''); }catch(e){ return false; } })();
 if(EMBED){ state.started=true; document.documentElement.classList.add('embed'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
-if(SHOP){ document.documentElement.classList.add('shop'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
+if(SHOP){ document.documentElement.classList.add('shop'); document.documentElement.setAttribute('data-theme','light'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
 function cartItems(){ const h=state.house, sel=state.sel[h];
   return roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null;
     return {room:r.id, name:r.name, wins:r.ws.length, price:p, ord:ordOf(r,s),
