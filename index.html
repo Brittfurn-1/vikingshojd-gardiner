@@ -179,6 +179,7 @@ textarea.copyout{width:100%;min-height:120px;font:12px/1.4 var(--sans);border:1p
 .cmpcard .cth img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
 .cmpcard b{font-weight:500;font-size:13px;margin-top:4px}
 .cmpcard small{color:var(--muted);font-size:12px}
+.cmppr{margin-top:6px;font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
 .allwin{color:var(--accent);font-weight:500}
 p.allwin{margin:4px 0 0;font-size:14px}
 .embed .house,.embed aside.sum,.embed .mobilebar{display:none!important}
@@ -622,6 +623,11 @@ function renderDetail(){
         ${rum?'':`<div class="seg" role="group" aria-label="Visa gardinerna">${views.map(([v,t])=>`<button id="view-${v}" data-v="${v}" aria-pressed="${state.view===v}">${t}</button>`).join('')}</div>`}
         <span class="note" id="stagenote">${rum?NOTE_RUM:NOTE_RIT}</span></div>
     </div>
+    <section class="compare" aria-label="Jämför tyger">
+      <span class="label">Jämför i det här rummet</span>
+      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
+        <span class="cth"><canvas class="cmpcv" data-i="${i}"></canvas></span><b>${c.title}</b><small>${c.sub}</small><span class="cmppr"><s class="ord">${fmt(ordOf(r,c.s))}</s> ${fmt(priceOf(r,c.s))}</span></button>`).join('')}</div>
+    </section>
     ${(()=>{ const lines=[], w=r.ws.length>1?' · '+r.ws.length+' fönster':'';
         if(!s.none){ lines.push([DATA[s.main].name+' '+colorOf(s.main,s.color).name+' · tyg, '+String(r.k[4]).replace('.',',')+' m'+w, r.k[0], dp(r.k[0])]);
           lines.push(['Sömnad med wave-veck, '+r.k[5]+' våder à '+fmt(SY_VAD), r.k[1], r.k[1]]);
@@ -634,11 +640,6 @@ function renderDetail(){
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
         return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg, band och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
-    <section class="compare" aria-label="Jämför tyger">
-      <span class="label">Jämför i det här rummet</span>
-      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
-        <span class="cth"><canvas class="cmpcv" data-i="${i}"></canvas></span><b>${c.title}</b><small>${c.sub}</small></button>`).join('')}</div>
-    </section>
     <section class="opt">
       <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
       <p class="note">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg, band och takskena; överstruket är ordinarie pris.</p>
