@@ -162,6 +162,8 @@ textarea.copyout{width:100%;min-height:120px;font:12px/1.4 var(--sans);border:1p
 .buildlist li{display:flex;justify-content:space-between;gap:12px;font-size:14px}
 .buildlist li span:first-child{min-width:0}
 .buildlist .pr{white-space:nowrap;flex:0 0 auto}
+.buildtot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:6px;padding-top:12px;border-top:1px solid var(--ink);font-family:var(--serif);font-size:22px;font-weight:500}
+.buildtot .pr{white-space:nowrap;font-variant-numeric:tabular-nums}
 .compare{display:flex;flex-direction:column;gap:8px}
 .cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px}
 .cmpcard{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;text-align:left;padding:6px;border-radius:6px;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -631,7 +633,7 @@ function renderDetail(){
           lines.push(['Laurie · montering och installation', r.lk[3], r.lk[3]]); }
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
-        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3><span class="pr">${sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':''}${fmt(sumd)}</span></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och band.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
+        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och band.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
     <section class="compare" aria-label="Jämför tyger">
       <span class="label">Jämför i det här rummet</span>
       <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
