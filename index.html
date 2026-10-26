@@ -618,7 +618,7 @@ function renderDetail(){
     <div class="stage">
       ${rum ? `<button class="envwrap" id="envbtn" aria-label="Förstora bilden"><canvas id="envcv" role="img" aria-label="${r.name} med ${s.none?'ingen gardin':DATA[s.main].name+' '+colorOf(s.main,s.color).name}${s.laurie?' och Laurie':''}"></canvas></button>` : `<div class="wins">${r.ws.map(w=>`<figure class="winfig"><div class="winsvg">${svgRoom({...r,...w},s,state.view,false)}</div><figcaption>${w.part?w.part+' · ':''}${w.win}</figcaption></figure>`).join('')}</div>`}
       <div class="stagebar">
-        ${rum && r.scenes.length>1 ? `<div class="seg" role="group" aria-label="Vy">${r.scenes.map((sc,i)=>`<button id="sv-${i}" data-sv="${i}" aria-pressed="${(state.sv||0)===i}">${({vardagsrum:'Vardagsrum',matplats:'Matplats'})[sc]||sc}</button>`).join('')}</div>` : ''}
+        ${rum && r.scenes.length>1 ? `<div class="seg" role="group" aria-label="Vy">${r.scenes.map((sc,i)=>`<button id="sv-${i}" data-sv="${i}" aria-pressed="${(state.sv||0)===i}">${({vardagsrum:'Vardagsrum',matplats:'Kök'})[sc]||sc}</button>`).join('')}</div>` : ''}
         ${rum?'':`<div class="seg" role="group" aria-label="Visa gardinerna">${views.map(([v,t])=>`<button id="view-${v}" data-v="${v}" aria-pressed="${state.view===v}">${t}</button>`).join('')}</div>`}
         <span class="note" id="stagenote">${rum?NOTE_RUM:NOTE_RIT}</span></div>
     </div>
