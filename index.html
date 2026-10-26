@@ -183,6 +183,9 @@ textarea.copyout{width:100%;min-height:120px;font:12px/1.4 var(--sans);border:1p
 .allwin{color:var(--accent);font-weight:500}
 p.allwin{margin:4px 0 0;font-size:14px}
 .embed .house,.embed aside.sum,.embed .mobilebar{display:none!important}
+.shop .house,.shop .mobilebar{display:none!important}
+.shop .wrap{padding-block:8px 24px}
+.btn[disabled]{opacity:.45;cursor:default}
 .embed .wrap{padding-block:8px 24px}
 .embed .grid{grid-template-columns:240px minmax(0,1fr)}
 @media (max-width:767px){.embed .grid{grid-template-columns:minmax(0,1fr)}}
@@ -711,9 +714,11 @@ function renderSum(){
     ${items?'<ul class="sumlist">'+items+'</ul>':'<p class="note">Inga rum valda ännu. Klicka på ett rum så väljs standardgardinen, och priset byggs på här.</p>'}
     ${tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg, band och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
     <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår.</span>
-    <div class="actions"><button class="btn" id="copy">Kopiera sammanställning</button></div>
+    ${SHOP?`<div class="actions"><button class="btn" id="checkout" ${tot?'':'disabled'}>Till kassan</button></div>
     <span class="copied" id="copied" aria-live="polite"></span>
-    <p class="note">Skicka sammanställningen till Brittfurn, Sturegatan 20, Stockholm: <span class="sel">info@brittfurn.se</span>. Vi bekräftar valen efter måttagning på plats.</p>
+    <p class="note">Du betalar i Brittfurns kassa. Efter beställningen kontaktar vi dig och bokar montering i ditt hus.</p>`:`<div class="actions"><button class="btn" id="copy">Kopiera sammanställning</button></div>
+    <span class="copied" id="copied" aria-live="polite"></span>
+    <p class="note">Skicka sammanställningen till Brittfurn, Sturegatan 20, Stockholm: <span class="sel">info@brittfurn.se</span>. Vi bekräftar valen efter måttagning på plats.</p>`}
     <p class="note">Andra tyger eller önskemål? Ring <span class="sel">08-661 70 80</span> så hjälper vi dig.</p>`;
   $('#mobilebar').innerHTML=`<div class="total"><span class="pr">${fmt(tot)}</span></div><button class="btn" id="m-sum">Sammanställning</button>`;
 }
@@ -735,7 +740,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.band){ s.bcolor=b.dataset.band; s.band=true; state.view='closed'; return render(); }
   if(b.id==='use-reco-band'){ s.bcolor=b.dataset.code; s.band=true; return render(); }
   if(b.id==='use-reco-sheer'){ s.lcolor=b.dataset.code; s.laurie=true; return render(); }
-  if(b.id==='intro-go'||b.id==='intro-go2'){ state.started=true; render(); window.scrollTo({top:0}); return; }
+  if(b.id==='intro-go'||b.id==='intro-go2'){ state.started=true; render(); window.scrollTo({top:0}); if(SHOP) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(err){} return; }
   if(b.id==='back-intro'){ state.started=false; render(); window.scrollTo({top:0}); return; }
   if(b.dataset.zoom){ const z=$('#zoom'); z.querySelector('img').src=b.dataset.zoom; z.hidden=false; z.querySelector('button').focus(); return; }
   if(b.id==='zoom-close'){ $('#zoom').hidden=true; return; }
@@ -752,6 +757,8 @@ document.addEventListener('click',e=>{
   if(b.id==='apply-similar'){ const r=roomById(state.room); for(const x of roomsFor(state.house)) if(!!x.sov===!!r.sov) sel[x.id]={...s}; return render(); }
   if(b.id==='reset'){ state.sel[state.house]=defaults(state.house); return render(); }
   if(b.id==='m-sum'){ $('#sum').scrollIntoView({behavior:'smooth'}); return; }
+  if(b.id==='checkout'){ const items=cartItems(); if(!items.length) return; $('#copied').textContent='Lägger dina gardiner i varukorgen …'; b.disabled=true;
+    try{ window.parent.postMessage({type:'bf-checkout', house:state.house, houseLabel:HOUSES[state.house].sub+', '+HOUSES[state.house].label, items},'*'); }catch(err){} return; }
   if(b.id==='copy'){ const t=summaryText(), out=$('#copied');
     const fallback=()=>{ out.innerHTML=''; const ta=document.createElement('textarea'); ta.className='copyout'; ta.value=t; ta.setAttribute('aria-label','Sammanställning'); $('#copied').after(ta); ta.select(); out.textContent='Markera texten nedan och kopiera den.'; };
     try{ navigator.clipboard.writeText(t).then(()=>{out.textContent='Kopierat. Klistra in i ett mejl till Brittfurn.'},fallback); }catch(err){ fallback(); }
@@ -769,9 +776,20 @@ document.addEventListener('mouseover',hov); document.addEventListener('mouseout'
 document.addEventListener('focusin',hov); document.addEventListener('focusout',out);
 /* ---------- Inbäddning i Vikingshöjds tillvalsportal ---------- */
 const FILTER2HOUSE={'parhus-1-5-136-a':'A','parhus-1-5-131-b':'B','parhus-6-7-136-a':'C','parhus-6-7-131-b':'D','minivilla':'M'};
-const EMBED=(()=>{ try{ if(new URLSearchParams(location.search).has('embed')) return true; const ao=location.ancestorOrigins; if(ao) for(const o of ao) if(/vikingshojd.se$/.test(o)) return true; return /vikingshojd.se/.test(document.referrer||''); }catch(e){ return false; } })();
+const SHOP=new URLSearchParams(location.search).has('shop');
+const EMBED=(()=>{ try{ if(SHOP) return false; if(new URLSearchParams(location.search).has('embed')) return true; const ao=location.ancestorOrigins; if(ao) for(const o of ao) if(/vikingshojd.se$/.test(o)) return true; return /vikingshojd.se/.test(document.referrer||''); }catch(e){ return false; } })();
 if(EMBED){ state.started=true; document.documentElement.classList.add('embed'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
-window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
+if(SHOP){ document.documentElement.classList.add('shop'); try{ const f=new URLSearchParams(location.search).get('house'); if(FILTER2HOUSE[f]) state.house=FILTER2HOUSE[f]; }catch(e){} }
+function cartItems(){ const h=state.house, sel=state.sel[h];
+  return roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null;
+    return {room:r.id, name:r.name, wins:r.ws.length, price:p, ord:ordOf(r,s),
+      gardin:s.none?null:{tyg:DATA[s.main].name, farg:colorOf(s.main,s.color).name, kod:s.color},
+      laurie:(s.laurie&&!r.sov)?{farg:colorOf('laurie',s.lcolor).name, kod:s.lcolor}:null,
+      band:(s.band&&!s.none)?{farg:bandOf(s).name, kod:bandOf(s).code}:null,
+      skena:railOf(s).name}; }).filter(Boolean); }
+const postH=()=>{ if(window.parent===window) return; try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} };
+if(SHOP && 'ResizeObserver' in window) new ResizeObserver(postH).observe(document.body);
+window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-checkout-error'){ const o=$('#copied'); if(o) o.textContent=d.message||'Något gick fel. Ring 08-661 70 80 så hjälper vi dig.'; const c=$('#checkout'); if(c) c.disabled=false; } if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
     const parts=[]; if(!s.none) parts.push(DATA[s.main].name+' '+c.name+', måttsydd wave på takskena'); if(s.laurie) parts.push('Laurie '+colorOf('laurie',s.lcolor).name); if(s.band&&!s.none) parts.push('Hera-band '+bandOf(s).name); if(!s.none) parts.push('skena '+railOf(s).name.toLowerCase());
