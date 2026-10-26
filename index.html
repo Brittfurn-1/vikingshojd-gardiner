@@ -237,6 +237,31 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .disc dt{color:var(--muted)}
 .disc dd{margin:0;font-variant-numeric:tabular-nums}
 .mobilebar{display:none}
+.mback,.mfler,.buildtoggle{display:none}
+@media (max-width:767px){
+  .mob .coll{display:none}
+  .mob-room .rooms,.mob-room aside.sum,.mob-room header.top{display:none!important}
+  .mob-list main.detail{display:none}
+  .mob-list .rooms{flex-direction:column;overflow:visible;gap:18px}
+  .mob-list .plan .rlist{flex-direction:column;gap:8px}
+  .mob-list .room{width:100%;flex:none;grid-template-columns:104px minmax(0,1fr);border:1px solid var(--line);background:var(--surface);padding:8px}
+  .mob-list .room .th{height:72px}
+  .mob .detail .contact,.mob .pricebreak{display:none}
+  .mob main.detail{gap:16px}
+  .mback{display:inline-flex;align-self:flex-start;border:0;background:none;color:var(--ink);font:inherit;font-size:15px;padding:6px 0;cursor:pointer}
+  .buildtoggle{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 12px;width:100%;border:0;background:none;color:inherit;font:inherit;text-align:left;padding:0;cursor:pointer}
+  .buildtoggle b{font-family:var(--serif);font-size:22px;font-weight:500}
+  .buildtoggle small{flex-basis:100%;color:var(--muted);font-size:13px;text-decoration:underline}
+  .buildtoggle.less small{text-align:center}
+  .build.compact{padding:12px 14px}
+  .mfler{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+  .mfler b{display:block;font-weight:600}
+  .mfler small{color:var(--muted);font-size:13px}
+  .showall{align-self:flex-start;margin-top:4px}
+  .mob .mhide{display:none}
+  .swatches.few{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+  .swatches.few small{font-size:11px;overflow-wrap:anywhere}
+}
 .prelim{display:inline-block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--accent);color:var(--accent);padding:3px 8px;border-radius:2px}
 @media (max-width:1199px){
   .grid{grid-template-columns:220px minmax(0,1fr)}
@@ -511,11 +536,24 @@ function renderRooms(){
       <span><b>${r.name}${r.part?' – '+r.part:''}</b>${r.ws.length>1?'<small class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster</small>':''}<small>${s.none?(s.laurie?'Laurie':'Inte valt'):DATA[s.main].name+' '+c.name}${s.laurie&&!s.none?' + Laurie':''}${s.band&&!s.none?' + band':''}</small><small class="pr">${priceOf(r,s)?'<s class="ord">'+fmt(ordOf(r,s))+'</s> '+fmt(priceOf(r,s)):'Från '+bothK(r.k)}${r.ws.length>1?' · 4 fönster':''}</small></span>
     </button>`}).join('')}</div></div>`).join('');
 }
+const isMob=()=>matchMedia('(max-width:767px)').matches;
+const FEW={verona:['31','04','22','23','05','32'], carina:['02','01','03','08','05','10']};
+function scrollTop(){ window.scrollTo({top:0}); if(window.parent!==window) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(e){} }
+function nextRoomId(){ const rs=roomsFor(state.house), i=rs.findIndex(x=>x.id===state.room); return i>=0&&i<rs.length-1 ? rs[i+1].id : null; }
+function openRoom(id){ state.room=id; state.view='open'; state.sv=0; const sr=state.sel[state.house][id]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } state.mstep='room'; render(); scrollTop(); }
+function houseTotal(){ const h=state.house; return roomsFor(h).reduce((a,r0)=>a+priceOf(roomFor(r0,h),state.sel[h][r0.id]),0); }
+function barInfo(){ const tot=houseTotal(), room=state.mstep==='room';
+  const label = room ? (nextRoomId()?'Nästa rum →':'Klar · se alla rum') : (SHOP?'Till kassan':'Sammanställning');
+  return {tot, label, disabled: !room && SHOP && !tot}; }
+function barAction(){ if(state.mstep==='room'){ const n=nextRoomId(); if(n) return openRoom(n); state.mstep='list'; render(); return scrollTop(); }
+  if(SHOP){ const c=$('#checkout'); if(c) c.click(); } else $('#sum').scrollIntoView({behavior:'smooth'}); }
 function swatchGrid(fab, cur, kind, list){
-  return `<p class="swhead">Färg på ${DATA[fab].name}${list?' · '+list.length+' rekommenderade':''}<span>Vald: ${colorOf(fab,cur).name}</span></p><div class="swatches" role="group" aria-label="Färger ${DATA[fab].name}">${(list||DATA[fab].colors).map(c=>`
+  let few=false;
+  if(!list && kind==='main' && isMob() && FEW[fab] && !(state.more&&state.more.allc)){ const codes=FEW[fab].includes(cur)?FEW[fab]:[cur,...FEW[fab].slice(0,5)]; list=codes.map(c=>colorOf(fab,c)); few=true; }
+  return `<p class="swhead">Färg på ${DATA[fab].name}${few?' · '+list.length+' av '+DATA[fab].colors.length:list?' · '+list.length+' rekommenderade':''}<span>Vald: ${colorOf(fab,cur).name}</span></p><div class="swatches${few?' few':''}" role="group" aria-label="Färger ${DATA[fab].name}">${(list||DATA[fab].colors).map(c=>`
     <button class="sw" id="sw-${kind}-${fab}-${c.code}" data-kind="${kind}" data-fab="${fab}" data-code="${c.code}" aria-pressed="${cur===c.code}" title="${DATA[fab].name} ${c.name}">
       <span class="img" style="background-image:url('${c.img}');background-color:${c.hex}"></span>
-      <small>${c.name}</small></button>`).join('')}</div>`;
+      <small>${c.name}</small></button>`).join('')}</div>${few?'<button class="btn ghost showall" data-more="allc">Visa alla '+DATA[fab].colors.length+' färger</button>':(kind==='main'&&isMob()&&state.more&&state.more.allc?'<button class="btn ghost showall" data-more="allc">Visa färre färger</button>':'')}`;
 }
 function compareSet(r,s){
   const vc = s.main==='verona'&&!s.none ? s.color : DATA.verona.def;
@@ -620,7 +658,9 @@ function renderDetail(){
   const views=[['open','Öppna'],...(s.laurie?[['sheer','Skira dragna']]:[]),['closed','Dragna']];
   const fabs = r.sov ? ['carina'] : ['verona'];
   const rum = state.stage==='rum';
+  const mob=isMob(), mo=state.more||{};
   $('#detail').innerHTML=`
+    <button class="mback" id="m-back">← Alla rum</button>
     <div class="head"><div><span class="label">${r.plan}</span><h2>${r.name}${r.part?' – '+r.part:''}</h2>${r.ws.length>1?'<p class="allwin">Gardiner till samtliga '+r.ws.length+' stora fönster: '+r.ws.map(w=>w.part).join(', ')+'</p>':''}</div><span class="meta">${r.ws.length>1?r.ws.length+' fönster · skena totalt '+r.railTotal+' cm':r.win+' · skena '+r.L+' cm'}</span></div>
     <div class="stage">
       ${rum ? `<button class="envwrap" id="envbtn" aria-label="Förstora bilden"><canvas id="envcv" role="img" aria-label="${r.name} med ${s.none?'ingen gardin':DATA[s.main].name+' '+colorOf(s.main,s.color).name}${s.laurie?' och Laurie':''}"></canvas></button>` : `<div class="wins">${r.ws.map(w=>`<figure class="winfig"><div class="winsvg">${svgRoom({...r,...w},s,state.view,false)}</div><figcaption>${w.part?w.part+' · ':''}${w.win}</figcaption></figure>`).join('')}</div>`}
@@ -645,12 +685,15 @@ function renderDetail(){
           lines.push(['Laurie · montering och installation', r.lk[3], r.lk[3]]); }
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
-        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg, band och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
+        if(mob && !mo.build) return `<section class="build compact"><button class="buildtoggle" data-more="build" aria-expanded="false"><span>Totalt för rummet</span><span class="pr">${sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':''}<b>${fmt(sumd)}</b></span><small>Visa vad som ingår ▾</small></button></section>`;
+        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg, band och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}${mob?'<button class="buildtoggle less" data-more="build" aria-expanded="true"><small>Dölj detaljer ▴</small></button>':''}</section>`; })()}
+    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>Färg, '+(r.sov?'':'Laurie, ')+'band och skena</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
+    ${(()=>{ if(mob && !mo.fler) return ''; return `
     <section class="opt">
       <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
-      <p class="note">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg, band och takskena; överstruket är ordinarie pris.</p>
+      <p class="note mhide">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg, band och takskena; överstruket är ordinarie pris.</p>
       ${s.none?'':`<ul class="buildlist pricebreak"><li><span>Tyg, ${String(r.k[4]).replace('.',',')} m</span><span class="pr"><s class="ord">${fmt(r.k[0])}</s> ${fmt(dp(r.k[0]))}</span></li><li><span>Sömnad med wave-veck, ${r.k[5]} våder à ${fmt(SY_VAD)}</span><span class="pr">${fmt(r.k[1])}</span></li><li><span>Takskena</span><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}</span></li><li><span>Montering och installation</span><span class="pr">${fmt(r.k[3])}</span></li></ul>`}
-      ${r.ws.length>1?`<p class="note">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
+      ${r.ws.length>1?`<p class="note mhide">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
       ${r.sov?`<p class="note">Sovrummen får Carina, som mörklägger helt utan foder, så rummet blir mörkt även en ljus natt i juni. Sydd med wave-veck.</p>`:''}
       <div class="tabs" role="group" aria-label="Tyg">
         ${fabs.map(f=>`<button class="tab" id="fab-${f}" data-fab="${f}" aria-pressed="${!s.none&&s.main===f}"><b>${DATA[f].name}${(f==='verona'||r.sov)?' · standard':''}</b><small>${DATA[f].desc}</small></button>`).join('')}
@@ -695,7 +738,7 @@ function renderDetail(){
     <div class="actions">
       <button class="btn ghost" id="apply-similar">Samma val i alla ${r.sov?'sovrum':'rum utom sovrum'}</button>
       <button class="btn ghost" id="reset">Rensa valen i alla rum</button>
-    </div>
+    </div>`; })()}
     <section class="contact" aria-label="Andra önskemål">
       <h3>Vill du ha något annat?</h3>
       <p>Vi syr också i andra tyger, med mönster, som hissgardiner, rullgardiner eller med annan upphängning. Kontakta oss så tar vi fram ett förslag för ditt hem.</p>
@@ -723,7 +766,7 @@ function renderSum(){
     <span class="copied" id="copied" aria-live="polite"></span>
     <p class="note">Skicka sammanställningen till Brittfurn, Sturegatan 20, Stockholm: <span class="sel">info@brittfurn.se</span>. Vi bekräftar valen efter måttagning på plats.</p>`}
     <p class="note">Andra tyger eller önskemål? Ring <span class="sel">08-661 70 80</span> så hjälper vi dig.</p>`;
-  $('#mobilebar').innerHTML=`<div class="total"><span class="pr">${fmt(tot)}</span></div><button class="btn" id="m-sum">Sammanställning</button>`;
+  const bi=barInfo(); $('#mobilebar').innerHTML=`<div class="total"><span class="pr">${fmt(tot)}</span></div><button class="btn" id="m-bar" ${bi.disabled?'disabled':''}>${bi.label}</button>`;
 }
 function renderColl(){
   const el=$('#coll'); if(!el || el.dataset.done) return; el.dataset.done='1';
@@ -733,7 +776,10 @@ function renderColl(){
   </article>`).join('');
 }
 function applyIntro(){ const show=!state.started; const i=$('#intro'), a=$('#app'); if(i) i.hidden=!show; if(a) a.hidden=show; const mb=$('#mobilebar'); if(mb) mb.style.visibility=show?'hidden':''; }
-function render(){ uid=0; ensureHouse(); applyIntro(); renderColl(); renderHouse(); renderRooms(); renderDetail(); renderSum(); save(); if(state.stage==='rum') paintAll(); paintThumbs(); postToPortal(); }
+function applyMob(){ const m=isMob(), H=document.documentElement; if(!state.mstep) state.mstep='list';
+  H.classList.toggle('mob', m); H.classList.toggle('mob-list', m && state.mstep==='list'); H.classList.toggle('mob-room', m && state.mstep==='room'); }
+function postBar(){ if(window.parent===window) return; const b=barInfo(); try{ window.parent.postMessage({type:'bf-bar', show: isMob() && !!state.started, total: fmt(b.tot), label: b.label, disabled: b.disabled},'*'); }catch(e){} }
+function render(){ uid=0; ensureHouse(); applyIntro(); applyMob(); renderColl(); renderHouse(); renderRooms(); renderDetail(); renderSum(); save(); if(state.stage==='rum') paintAll(); paintThumbs(); postToPortal(); postBar(); }
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
@@ -750,7 +796,9 @@ document.addEventListener('click',e=>{
   if(b.dataset.stage){ state.stage=b.dataset.stage; return render(); }
   if(b.dataset.more){ state.more=state.more||{}; state.more[b.dataset.more]=!state.more[b.dataset.more]; return render(); }
   if(b.dataset.h){ state.house=b.dataset.h; state.sv=0; return render(); }
-  if(b.dataset.r){ state.room=b.dataset.r; state.view='open'; state.sv=0; const sr=state.sel[state.house][b.dataset.r]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } render(); if(matchMedia('(max-width:767px)').matches) $('#detail').scrollIntoView({behavior:'smooth',block:'start'}); return; }
+  if(b.dataset.r){ if(isMob()) return openRoom(b.dataset.r); state.room=b.dataset.r; state.view='open'; state.sv=0; const sr=state.sel[state.house][b.dataset.r]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } render(); return; }
+  if(b.id==='m-back'){ state.mstep='list'; render(); scrollTop(); return; }
+  if(b.id==='m-bar'){ barAction(); return; }
   if(b.dataset.v){ state.view=b.dataset.v; return render(); }
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
   if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
@@ -792,7 +840,8 @@ function cartItems(){ const h=state.house, sel=state.sel[h];
       skena:railOf(s).name}; }).filter(Boolean); }
 const postH=()=>{ if(window.parent===window) return; try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} };
 if(SHOP && 'ResizeObserver' in window) new ResizeObserver(postH).observe(document.body);
-window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-checkout-error'){ const o=$('#copied'); if(o) o.textContent=d.message||'Något gick fel. Ring 08-661 70 80 så hjälper vi dig.'; const c=$('#checkout'); if(c) c.disabled=false; } if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
+matchMedia('(max-width:767px)').addEventListener('change',()=>render());
+window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-bar-click'){ barAction(); return; } if(d.type==='bf-checkout-error'){ const o=$('#copied'); if(o) o.textContent=d.message||'Något gick fel. Ring 08-661 70 80 så hjälper vi dig.'; const c=$('#checkout'); if(c) c.disabled=false; } if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
     const parts=[]; if(!s.none) parts.push(DATA[s.main].name+' '+c.name+', måttsydd wave på takskena'); if(s.laurie) parts.push('Laurie '+colorOf('laurie',s.lcolor).name); if(s.band&&!s.none) parts.push('Hera-band '+bandOf(s).name); if(!s.none) parts.push('skena '+railOf(s).name.toLowerCase());
