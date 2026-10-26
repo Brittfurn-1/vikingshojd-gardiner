@@ -263,7 +263,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
       <img class="ilogo" src="img/logo.svg" alt="Brittfurn">
       <span class="ikicker">Vikingshöjd-kollektionen</span>
       <h1>Det är detaljerna<br><em>som gör ett hem.</em></h1>
-      <p>Som köpare på Vikingshöjd har du tillgång till en gardinkollektion som Brittfurn har tagit fram exklusivt för husen här, med 20 % rabatt på tyg och band under en begränsad tid. Du väljer tyg och färg. Vi mäter, syr och monterar, så att allt hänger på plats när du får nycklarna.</p>
+      <p>Som köpare på Vikingshöjd har du tillgång till en gardinkollektion som Brittfurn har tagit fram exklusivt för husen här, med 20 % rabatt på tyg, band och takskena under en begränsad tid. Du väljer tyg och färg. Vi mäter, syr och monterar, så att allt hänger på plats när du får nycklarna.</p>
       <button class="btn ibtn" id="intro-go">Utforska gardiner för ditt hem</button>
     </div>
   </div>
@@ -271,7 +271,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
     <div><b>Designat för ditt hem</b><span>Tre noga utvalda gardinstilar som framhäver ljuset, fönstren och arkitekturen på Vikingshöjd.</span></div>
     <div><b>En känsla av helhet</b><span>Generösa tyger och takhängda gardiner skapar mjukhet, rymd och en elegant hotellkänsla.</span></div>
     <div><b>Färdigt vid inflyttning</b><span>Vi tar hand om måttagning, sömnad och montering. Du kommer hem till ett färdigt resultat.</span></div>
-    <p class="ioffer">Exklusivt erbjudande: Som boende på Vikingshöjd får du 20 % rabatt på tyget och Hera-bandet till alla gardiner.</p>
+    <p class="ioffer">Exklusivt erbjudande: Som boende på Vikingshöjd får du 20 % rabatt på tyget, Hera-bandet och takskenan till alla gardiner.</p>
   </div>
   <div class="igods">
     <h2 class="igods-h">Tre tyger och ett band</h2>
@@ -297,7 +297,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
       <h1>Välj gardiner <em>rum för rum</em></h1>
       <ul class="vp">
         <li><b>Designat för ditt hem</b> av Brittfurns designers</li>
-        <li><b>20 % rabatt på tyg och band</b> för dig som bor på Vikingshöjd</li>
+        <li><b>20 % rabatt på tyg, band och skena</b> för dig som bor på Vikingshöjd</li>
         <li><b>Färdigt vid inflyttning:</b> måttsytt och monterat</li>
       </ul>
       <p class="lede">Välj tyg och färg för varje fönster och se direkt hur det blir.</p>
@@ -323,7 +323,7 @@ const BAND_PRICE = 3500; // ordinarie
 const DISC=.20; // Vikingshöjd-rabatt, gäller bara tyget
 const dp=n=>Math.round(n*(1-DISC)/100)*100;
 const SY_VAD=1850; // sömnad per våd
-const kOrd=k=>k[0]+k[1]+k[2]+k[3], kPris=k=>dp(k[0])+k[1]+k[2]+k[3];
+const kOrd=k=>k[0]+k[1]+k[2]+k[3], kPris=k=>dp(k[0])+k[1]+dp(k[2])+k[3];
 const bothK=k=>'<s class="ord">'+fmt(kOrd(k))+'</s> '+fmt(kPris(k));
 const RAILS=[{code:'58',name:'Borstad matt svart',hex:'#1a1a1a',img:'img/skena/svart.jpg'},{code:'55',name:'Matt borstad brons',hex:'#7a6142',img:'img/skena/brons.jpg'},{code:'57',name:'Borstad matt nickel',hex:'#a3a29d',img:'img/skena/nickel.jpg'},{code:'56',name:'Matt vit',hex:'#ecebe7',img:'img/skena/vit.jpg'}];
 const railOf=s=>RAILS.find(x=>x.code===(s.rcolor||'58'))||RAILS[0];
@@ -625,15 +625,15 @@ function renderDetail(){
     ${(()=>{ const lines=[], w=r.ws.length>1?' · '+r.ws.length+' fönster':'';
         if(!s.none){ lines.push([DATA[s.main].name+' '+colorOf(s.main,s.color).name+' · tyg, '+String(r.k[4]).replace('.',',')+' m'+w, r.k[0], dp(r.k[0])]);
           lines.push(['Sömnad med wave-veck, '+r.k[5]+' våder à '+fmt(SY_VAD), r.k[1], r.k[1]]);
-          lines.push(['Takskena, '+railOf(s).name.toLowerCase(), r.k[2], r.k[2]]);
+          lines.push(['Takskena, '+railOf(s).name.toLowerCase(), r.k[2], dp(r.k[2])]);
           lines.push(['Montering och installation', r.k[3], r.k[3]]); }
         if(s.laurie&&!r.sov){ lines.push(['Laurie '+colorOf('laurie',s.lcolor).name+' · tyg, '+String(r.lk[4]).replace('.',',')+' m'+w, r.lk[0], dp(r.lk[0])]);
           lines.push(['Laurie · sömnad, '+r.lk[5]+' våder à '+fmt(SY_VAD), r.lk[1], r.lk[1]]);
-          lines.push(['Laurie · egen dold takskena', r.lk[2], r.lk[2]]);
+          lines.push(['Laurie · egen dold takskena', r.lk[2], dp(r.lk[2])]);
           lines.push(['Laurie · montering och installation', r.lk[3], r.lk[3]]); }
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
-        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och band.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
+        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg, band och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}</section>`; })()}
     <section class="compare" aria-label="Jämför tyger">
       <span class="label">Jämför i det här rummet</span>
       <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
@@ -641,8 +641,8 @@ function renderDetail(){
     </section>
     <section class="opt">
       <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
-      <p class="note">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg och band; överstruket är ordinarie pris.</p>
-      ${s.none?'':`<ul class="buildlist pricebreak"><li><span>Tyg, ${String(r.k[4]).replace('.',',')} m</span><span class="pr"><s class="ord">${fmt(r.k[0])}</s> ${fmt(dp(r.k[0]))}</span></li><li><span>Sömnad med wave-veck, ${r.k[5]} våder à ${fmt(SY_VAD)}</span><span class="pr">${fmt(r.k[1])}</span></li><li><span>Takskena</span><span class="pr">${fmt(r.k[2])}</span></li><li><span>Montering och installation</span><span class="pr">${fmt(r.k[3])}</span></li></ul>`}
+      <p class="note">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg, band och takskena; överstruket är ordinarie pris.</p>
+      ${s.none?'':`<ul class="buildlist pricebreak"><li><span>Tyg, ${String(r.k[4]).replace('.',',')} m</span><span class="pr"><s class="ord">${fmt(r.k[0])}</s> ${fmt(dp(r.k[0]))}</span></li><li><span>Sömnad med wave-veck, ${r.k[5]} våder à ${fmt(SY_VAD)}</span><span class="pr">${fmt(r.k[1])}</span></li><li><span>Takskena</span><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}</span></li><li><span>Montering och installation</span><span class="pr">${fmt(r.k[3])}</span></li></ul>`}
       ${r.ws.length>1?`<p class="note">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
       ${r.sov?`<p class="note">Sovrummen får Carina, som mörklägger helt utan foder, så rummet blir mörkt även en ljus natt i juni. Sydd med wave-veck.</p>`:''}
       <div class="tabs" role="group" aria-label="Tyg">
@@ -700,7 +700,7 @@ function summaryText(){
   for(const r0 of roomsFor(h)){ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) continue; tot+=p; ord+=ordOf(r,s);
     const c=colorOf(s.main,s.color), l=colorOf('laurie',s.lcolor);
     t+=`${r.name}${r.part?' – '+r.part:''}: ${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name+''}${s.laurie?' + Laurie '+l.name:''}${s.band&&!s.none?' + Hera-band '+bandOf(s).name:''}${s.none?'':', skena '+railOf(s).name.toLowerCase()} – ${fmt(p)}\n`; }
-  return t+`\nOrdinarie pris: ${fmt(ord)}\nVikingshöjd-rabatt 20 % på tyg och band: −${fmt(ord-tot)}\nTotalt: ${fmt(tot)} inkl. moms`;
+  return t+`\nOrdinarie pris: ${fmt(ord)}\nVikingshöjd-rabatt 20 % på tyg, band och skena: −${fmt(ord-tot)}\nTotalt: ${fmt(tot)} inkl. moms`;
 }
 function renderSum(){
   const h=state.house, sel=state.sel[h]; let tot=0, ord=0;
@@ -708,7 +708,7 @@ function renderSum(){
     return `<li><b>${r.name}${r.part?' – '+r.part:''}</b><span class="pr">${fmt(p)}</span><small>${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name}${s.laurie?' · Laurie '+colorOf('laurie',s.lcolor).name:''}${s.band&&!s.none?' · Hera '+bandOf(s).name:''}</small></li>`}).join('');
   $('#sum').innerHTML=`<div><span class="label">Din sammanställning</span><h3>${HOUSES[h].sub}, ${HOUSES[h].label}</h3></div>
     ${items?'<ul class="sumlist">'+items+'</ul>':'<p class="note">Inga rum valda ännu. Klicka på ett rum så väljs standardgardinen, och priset byggs på här.</p>'}
-    ${tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg och band</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
+    ${tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg, band och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
     <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår.</span>
     <div class="actions"><button class="btn" id="copy">Kopiera sammanställning</button></div>
     <span class="copied" id="copied" aria-live="polite"></span>
@@ -774,7 +774,7 @@ window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-house
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
     const parts=[]; if(!s.none) parts.push(DATA[s.main].name+' '+c.name+', måttsydd wave på takskena'); if(s.laurie) parts.push('Laurie '+colorOf('laurie',s.lcolor).name); if(s.band&&!s.none) parts.push('Hera-band '+bandOf(s).name); if(!s.none) parts.push('skena '+railOf(s).name.toLowerCase());
-    return {id:'bf-gardin-'+r.id, name:'Gardiner – '+r.name, price:p, description:parts.join(' · ')+(r.ws.length>1?' ('+r.ws.length+' fönster)':'')+' · ord. pris '+fmt(ordOf(r,s))+', 20 % Vikingshöjd-rabatt på tyg och band'}; }).filter(Boolean);
+    return {id:'bf-gardin-'+r.id, name:'Gardiner – '+r.name, price:p, description:parts.join(' · ')+(r.ws.length>1?' ('+r.ws.length+' fönster)':'')+' · ord. pris '+fmt(ordOf(r,s))+', 20 % Vikingshöjd-rabatt på tyg, band och skena'}; }).filter(Boolean);
   try{ window.parent.postMessage({type:'bf-gardiner', house:h, items, height:document.documentElement.scrollHeight},'*'); }catch(e){} }
 if(EMBED && 'ResizeObserver' in window){ new ResizeObserver(()=>{ try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} }).observe(document.body); }
 render();
