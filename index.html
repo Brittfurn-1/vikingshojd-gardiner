@@ -238,6 +238,17 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .disc div{display:flex;justify-content:space-between;gap:12px}
 .disc dt{color:var(--muted)}
 .disc dd{margin:0;font-variant-numeric:tabular-nums}
+.kud{display:flex;flex-direction:column;gap:8px;padding-top:12px;border-top:1px solid var(--line)}
+.kud-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kud-h b{font-weight:500}
+.kudlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.kudlist li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;font-size:13px}
+.kudlist li span small{display:block;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.qty{display:inline-flex;align-items:center;gap:6px}
+.qty button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 15px/1 var(--sans);cursor:pointer;padding:0}
+.qty button:disabled{opacity:.35;cursor:default}
+.qty button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qty output{min-width:18px;text-align:center;font-variant-numeric:tabular-nums}
 /* förstasidan: serif bara i rubriker, en sans för resten */
 .intro .btn{text-transform:none;letter-spacing:0;font-size:15px;font-weight:500}
 .ihero-txt{gap:16px}
@@ -364,6 +375,13 @@ const BAND_PRICE = 3500; // ordinarie
 const DISC=.20; // Vikingshöjd-rabatt, gäller bara tyget
 const dp=n=>Math.round(n*(1-DISC)/100)*100;
 const SY_VAD=1850; // sömnad per våd
+const KUDDAR=[{id:'30x50',p:165},{id:'40x40',p:169},{id:'50x50',p:219},{id:'40x60',p:280},{id:'50x75',p:300},{id:'60x60',p:325},{id:'70x70',p:559},{id:'50x90',p:605,fill:'ankfjäder'},{id:'80x80',p:700}]; // Norsk Dun, ordinarie pris, ingen rabatt
+const kudSel=()=>{ state.kud=state.kud||{}; return state.kud[state.house]=state.kud[state.house]||{}; };
+const kudName=k=>'Innerkudde '+k.id.replace('x','×')+' cm'+(k.fill?', '+k.fill:', dun');
+// Kuddarna döljs i butiksläget (brittfurn.se) tills kassan har kuddprodukter (innerkudde-norsk-dun är DRAFT) – annars försvinner de tyst i varukorgen.
+const kudOn=()=>typeof SHOP==='undefined'||!SHOP;
+const kudRows=()=>{ if(!kudOn()) return []; const q=kudSel(); return KUDDAR.filter(k=>q[k.id]>0).map(k=>({k,n:q[k.id],sum:k.p*q[k.id]})); };
+const kudTotal=()=>kudRows().reduce((a,x)=>a+x.sum,0);
 const kOrd=k=>k[0]+k[1]+k[2]+k[3], kPris=k=>dp(k[0])+k[1]+dp(k[2])+k[3];
 const bothK=k=>'<s class="ord">'+fmt(kOrd(k))+'</s> '+fmt(kPris(k));
 const RAILS=[{code:'58',name:'Borstad matt svart',hex:'#1a1a1a',img:'img/skena/svart.jpg'},{code:'55',name:'Matt borstad brons',hex:'#7a6142',img:'img/skena/brons.jpg'},{code:'57',name:'Borstad matt nickel',hex:'#a3a29d',img:'img/skena/nickel.jpg'},{code:'56',name:'Matt vit',hex:'#ecebe7',img:'img/skena/vit.jpg'}];
@@ -550,7 +568,7 @@ const FEW={verona:['31','04','22','23','05','32'], carina:['02','01','03','08','
 function scrollTop(){ window.scrollTo({top:0}); if(window.parent!==window) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(e){} }
 function nextRoomId(){ const rs=roomsFor(state.house), i=rs.findIndex(x=>x.id===state.room); return i>=0&&i<rs.length-1 ? rs[i+1].id : null; }
 function openRoom(id){ try{ if(isMob()){ const st={vh:'room',room:id}; if(history.state&&history.state.vh==='room') history.replaceState(st,''); else history.pushState(st,''); } }catch(e){} state.room=id; state.view='open'; state.sv=0; const sr=state.sel[state.house][id]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } state.mstep='room'; render(); scrollTop(); }
-function houseTotal(){ const h=state.house; return roomsFor(h).reduce((a,r0)=>a+priceOf(roomFor(r0,h),state.sel[h][r0.id]),0); }
+function houseTotal(){ const h=state.house; return roomsFor(h).reduce((a,r0)=>a+priceOf(roomFor(r0,h),state.sel[h][r0.id]),0)+kudTotal(); }
 function barInfo(){ const tot=houseTotal(), room=state.mstep==='room';
   const label = room ? (nextRoomId()?'Nästa rum →':'Klar · se alla rum') : (SHOP?'Till kassan':'Sammanställning');
   return {tot, label, disabled: !room && SHOP && !tot}; }
@@ -762,16 +780,21 @@ function summaryText(){
   for(const r0 of roomsFor(h)){ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) continue; tot+=p; ord+=ordOf(r,s);
     const c=colorOf(s.main,s.color), l=colorOf('laurie',s.lcolor);
     t+=`${r.name}${r.part?' – '+r.part:''}: ${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name+''}${s.laurie?' + Laurie '+l.name:''}${s.band&&!s.none?' + Hera-band '+bandOf(s).name:''}${s.none?'':', skena '+railOf(s).name.toLowerCase()} – ${fmt(p)}\n`; }
-  return t+`\nOrdinarie pris: ${fmt(ord)}\nVikingshöjd-rabatt 20 % på tyg, band och skena: −${fmt(ord-tot)}\nTotalt: ${fmt(tot)} inkl. moms`;
+  for(const x of kudRows()){ t+=`${kudName(x.k)} (Norsk Dun), ${x.n} st à ${fmt(x.k.p)} – ${fmt(x.sum)}\n`; tot+=x.sum; ord+=x.sum; }
+  return t+`\nOrdinarie pris: ${fmt(ord)}${ord>tot?`\nVikingshöjd-rabatt 20 % på tyg, band och skena: −${fmt(ord-tot)}`:''}\nTotalt: ${fmt(tot)} inkl. moms`;
 }
 function renderSum(){
   const h=state.house, sel=state.sel[h]; let tot=0, ord=0;
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return ''; tot+=p; ord+=ordOf(r,s); const c=colorOf(s.main,s.color);
-    return `<li><b>${r.name}${r.part?' – '+r.part:''}</b><span class="pr">${fmt(p)}</span><small>${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name}${s.laurie?' · Laurie '+colorOf('laurie',s.lcolor).name:''}${s.band&&!s.none?' · Hera '+bandOf(s).name:''}</small></li>`}).join('');
+    return `<li><b>${r.name}${r.part?' – '+r.part:''}</b><span class="pr">${fmt(p)}</span><small>${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name}${s.laurie?' · Laurie '+colorOf('laurie',s.lcolor).name:''}${s.band&&!s.none?' · Hera '+bandOf(s).name:''}</small></li>`}).join('')
+    + kudRows().map(x=>{ tot+=x.sum; ord+=x.sum; return `<li><b>${kudName(x.k)}</b><span class="pr">${fmt(x.sum)}</span><small>Norsk Dun · ${x.n} st à ${fmt(x.k.p)}</small></li>`; }).join('');
+  const kq=kudSel(), kOpen=!!(state.more&&state.more.kud)||kudRows().length>0;
+  const kudBox=!kudOn()?'':`<div class="kud"><div class="kud-h"><span><b>Innerkuddar från Norsk Dun</b><small class="note" style="display:block">Tillval · dun, 50×90 i ankfjäder</small></span>${plusBtn('kud','innerkuddar')}</div>${kOpen?`<ul class="kudlist">${KUDDAR.map(k=>{ const n=kq[k.id]||0; return `<li><span>${k.id.replace('x','×')} cm${k.fill?' · '+k.fill:''}<small>${fmt(k.p)}</small></span><span class="qty"><button data-kud="${k.id}" data-d="-1" aria-label="Färre ${k.id}" ${n?'':'disabled'}>−</button><output aria-label="Antal ${k.id}">${n}</output><button data-kud="${k.id}" data-d="1" aria-label="Fler ${k.id}">+</button></span></li>`; }).join('')}</ul><p class="note" style="margin:0">Ordinarie pris, Vikingshöjd-rabatten gäller inte kuddar.</p>`:''}</div>`;
   $('#sum').innerHTML=`<div><span class="label">Din sammanställning</span><h3>${HOUSES[h].sub}, ${HOUSES[h].label}</h3></div>
     ${items?'<ul class="sumlist">'+items+'</ul>':'<p class="note">Inga rum valda ännu. Klicka på ett rum så väljs standardgardinen, och priset byggs på här.</p>'}
-    ${tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg, band och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
-    <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår.</span>
+    ${kudBox}
+    ${tot&&ord>tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg, band och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
+    <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår i gardinerna.</span>
     ${SHOP?`<div class="actions"><button class="btn" id="checkout" ${tot?'':'disabled'}>Till kassan</button></div>
     <span class="copied" id="copied" aria-live="polite"></span>
     <p class="note">Du betalar i Brittfurns kassa. Gardinerna monteras i ditt hus innan du flyttar in, och vi hör av oss med datum.</p>`:`<div class="actions"><button class="btn" id="copy">Kopiera sammanställning</button></div>
@@ -797,6 +820,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
   const sel=state.sel[state.house], s=sel[state.room];
   if(b.id==='envbtn'){ const cv=$('#envcv'); if(!cv||!cv.width) return; const z=$('#zoom'); z.querySelector('img').src=cv.toDataURL('image/jpeg',.9); z.hidden=false; z.querySelector('button').focus(); return; }
+  if(b.dataset.kud){ const q=kudSel(); q[b.dataset.kud]=Math.max(0,(q[b.dataset.kud]||0)+(+b.dataset.d)); return render(); }
   if(b.dataset.rail){ s.rcolor=b.dataset.rail; return render(); }
   if(b.dataset.band){ s.bcolor=b.dataset.band; s.band=true; state.view='closed'; return render(); }
   if(b.id==='use-reco-band'){ s.bcolor=b.dataset.code; s.band=true; return render(); }
@@ -849,7 +873,8 @@ function cartItems(){ const h=state.house, sel=state.sel[h];
       gardin:s.none?null:{tyg:DATA[s.main].name, farg:colorOf(s.main,s.color).name, kod:s.color},
       laurie:(s.laurie&&!r.sov)?{farg:colorOf('laurie',s.lcolor).name, kod:s.lcolor}:null,
       band:(s.band&&!s.none)?{farg:bandOf(s).name, kod:bandOf(s).code}:null,
-      skena:railOf(s).name}; }).filter(Boolean); }
+      skena:railOf(s).name}; }).filter(Boolean)
+    .concat(kudRows().map(x=>({room:'kudde-'+x.k.id, name:kudName(x.k)+' (Norsk Dun)', wins:0, qty:x.n, unit:x.k.p, price:x.sum, ord:x.sum, gardin:null, laurie:null, band:null, skena:null, kudde:{storlek:x.k.id, fyllning:x.k.fill||'dun', antal:x.n, styckpris:x.k.p}}))); }
 const postH=()=>{ if(window.parent===window) return; try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} };
 if(SHOP && 'ResizeObserver' in window) new ResizeObserver(postH).observe(document.body);
 matchMedia('(max-width:767px)').addEventListener('change',()=>render());
@@ -863,6 +888,7 @@ function postToPortal(){ if(!EMBED||window.parent===window) return; const h=stat
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
     const parts=[]; if(!s.none) parts.push(DATA[s.main].name+' '+c.name+', måttsydd wave på takskena'); if(s.laurie) parts.push('Laurie '+colorOf('laurie',s.lcolor).name); if(s.band&&!s.none) parts.push('Hera-band '+bandOf(s).name); if(!s.none) parts.push('skena '+railOf(s).name.toLowerCase());
     return {id:'bf-gardin-'+r.id, name:'Gardiner – '+r.name, price:p, description:parts.join(' · ')+(r.ws.length>1?' ('+r.ws.length+' fönster)':'')+' · ord. pris '+fmt(ordOf(r,s))+', 20 % Vikingshöjd-rabatt på tyg, band och skena'}; }).filter(Boolean);
+  for(const x of kudRows()) items.push({id:'bf-kudde-'+x.k.id, name:kudName(x.k)+' (Norsk Dun)', price:x.sum, description:x.n+' st à '+fmt(x.k.p)+' · ordinarie pris'});
   try{ window.parent.postMessage({type:'bf-gardiner', house:h, items, height:document.documentElement.scrollHeight},'*'); }catch(e){} }
 if(EMBED && 'ResizeObserver' in window){ new ResizeObserver(()=>{ try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} }).observe(document.body); }
 render();
