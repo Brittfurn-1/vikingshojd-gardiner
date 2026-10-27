@@ -236,6 +236,16 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .disc div{display:flex;justify-content:space-between;gap:12px}
 .disc dt{color:var(--muted)}
 .disc dd{margin:0;font-variant-numeric:tabular-nums}
+/* förstasidan: serif bara i rubriker, en sans för resten */
+.intro .btn{text-transform:none;letter-spacing:0;font-size:15px;font-weight:500}
+.ihero-txt{gap:16px}
+.ihero h1{font-size:clamp(32px,4.4vw,52px);line-height:1.1}
+.ihero p{font-size:16px;max-width:46ch}
+.iwhy b{font-family:var(--sans);font-size:16px;font-weight:600}
+.igods h2{font-size:28px}
+.igods small{text-transform:none;letter-spacing:0;font-size:13px}
+.isteps li::before{font-family:var(--sans);font-size:15px;font-weight:600;color:var(--muted);content:counter(s) "."}
+.isteps b{font-weight:600}
 .mobilebar{display:none}
 .mback,.mfler,.buildtoggle{display:none}
 @media (max-width:767px){
@@ -292,33 +302,30 @@ p.allwin{margin:4px 0 0;font-size:14px}
   <div class="ihero">
     <img src="img/miljo/verona-sv2.jpg" alt="Verona i ett ljust hem med stora fönster mot grönska">
     <div class="ihero-txt">
-      <img class="ilogo" src="img/logo.svg" alt="Brittfurn">
-      <span class="ikicker">Vikingshöjd-kollektionen</span>
-      <h1>Det är detaljerna<br><em>som gör ett hem.</em></h1>
-      <p>Som köpare på Vikingshöjd har du tillgång till en gardinkollektion som Brittfurn har tagit fram exklusivt för husen här, med 20 % rabatt på tyg, band och takskena under en begränsad tid. Du väljer tyg och färg. Vi mäter, syr och monterar, så att allt hänger på plats när du får nycklarna.</p>
-      <button class="btn ibtn" id="intro-go">Utforska gardiner för ditt hem</button>
+      <h1>Gardiner för ditt hus på Vikingshöjd</h1>
+      <p>Måttsydda efter husets ritningar och monterade innan du flyttar in. Som köpare får du 20 % rabatt på tyg, band och takskena.</p>
+      <button class="btn ibtn" id="intro-go">Välj gardiner</button>
     </div>
   </div>
   <div class="iwhy">
-    <div><b>Designat för ditt hem</b><span>Tre noga utvalda gardinstilar som framhäver ljuset, fönstren och arkitekturen på Vikingshöjd.</span></div>
-    <div><b>En känsla av helhet</b><span>Generösa tyger och takhängda gardiner skapar mjukhet, rymd och en elegant hotellkänsla.</span></div>
-    <div><b>Färdigt vid inflyttning</b><span>Vi tar hand om måttagning, sömnad och montering. Du kommer hem till ett färdigt resultat.</span></div>
-    <p class="ioffer">Exklusivt erbjudande: Som boende på Vikingshöjd får du 20 % rabatt på tyget, Hera-bandet och takskenan till alla gardiner.</p>
+    <div><b>Designat för husen</b><span>Tre tyger som framhäver ljuset, fönstren och arkitekturen på Vikingshöjd.</span></div>
+    <div><b>Takhängt och generöst</b><span>Gardiner från tak till golv ger mjukhet och rymd i rummen.</span></div>
+    <div><b>Klart vid inflyttning</b><span>Vi syr och monterar. Du kommer hem till ett färdigt resultat.</span></div>
   </div>
   <div class="igods">
     <h2 class="igods-h">Tre tyger och ett band</h2>
-    <article><img src="img/miljo/verona-sv1.jpg" alt="Verona" loading="lazy"><div><span class="ikicker">Vardagsrum, kök och allrum</span><h2>Verona</h2><p>Ett tyg med linnets lite ojämna, levande yta och ett mjukt fall. Det är gardinen vi föreslår i husens stora rum.</p><small>35 färger · flamskyddad · 295 cm</small></div></article>
-    <article><img src="img/miljo/carina-nott.jpg" alt="Carina" loading="lazy"><div><span class="ikicker">Sovrum</span><h2>Carina</h2><p>Mörklägger helt, utan foder: det är tyget självt som stänger ute ljuset. Bra att ha när det är ljust klockan tre en natt i juni.</p><small>11 färger · mörkläggande · 280 cm</small></div></article>
-    <article><img src="img/miljo/laurie-kenza.jpg" alt="Laurie" loading="lazy"><div><span class="ikicker">Skir innergardin, tillval</span><h2>Laurie</h2><p>Hänger på en egen skena närmast glaset. Dragen på dagen släpper den in dagsljuset men håller blickarna ute, och på kvällen drar du huvudgardinen framför.</p><small>24 färger · flamskyddad Trevira CS · 297 cm</small></div></article>
-    <article class="ihera"><div class="iband" aria-hidden="true"><span style="background-image:url('img/hera-9100-h.jpg')"></span><span style="background-image:url('img/hera-9300-h.jpg')"></span><span style="background-image:url('img/hera-9400-h.jpg')"></span><span style="background-image:url('img/hera-9600-h.jpg')"></span><span style="background-image:url('img/hera-9900-h.jpg')"></span><span style="background-image:url('img/hera-9910-h.jpg')"></span></div><div><span class="ikicker">Broderat band, tillval</span><h2>Hera</h2><p>Ett 53 mm brett band längs framkanten där gardinerna möts, från skenan ner till golvet. Det sys på Verona eller Carina, och syns både när gardinen är fördragen och när den är öppen.</p><small>6 färger · 53 mm</small></div></article>
+    <article><img src="img/miljo/verona-sv1.jpg" alt="Verona" loading="lazy"><div><h2>Verona</h2><p>Linnets levande yta och ett mjukt fall. Vårt förslag till husens stora rum.</p><small>Vardagsrum, kök och allrum · 35 färger</small></div></article>
+    <article><img src="img/miljo/carina-nott.jpg" alt="Carina" loading="lazy"><div><h2>Carina</h2><p>Mörklägger helt utan foder, även en ljus natt i juni.</p><small>Sovrum · 11 färger</small></div></article>
+    <article><img src="img/miljo/laurie-kenza.jpg" alt="Laurie" loading="lazy"><div><h2>Laurie</h2><p>Skir innergardin närmast glaset. Släpper in dagsljuset men håller blickarna ute.</p><small>Tillval · 24 färger</small></div></article>
+    <article class="ihera"><div class="iband" aria-hidden="true"><span style="background-image:url('img/hera-9100-h.jpg')"></span><span style="background-image:url('img/hera-9300-h.jpg')"></span><span style="background-image:url('img/hera-9400-h.jpg')"></span><span style="background-image:url('img/hera-9600-h.jpg')"></span><span style="background-image:url('img/hera-9900-h.jpg')"></span><span style="background-image:url('img/hera-9910-h.jpg')"></span></div><div><h2>Hera</h2><p>Broderat band längs framkanten där gardinerna möts, på Verona eller Carina.</p><small>Tillval · 6 färger</small></div></article>
   </div>
   <div class="isteps">
     <h2>Så går det till</h2>
-    <ol><li><b>Välj rum</b><span>Klicka på rummen i ditt hus. Verona, eller Carina i sovrummen, väljs som standard.</span></li>
-    <li><b>Lägg till det du vill ha</b><span>Laurie för insynsskydd, Hera-bandet och skenans finish. Priset byggs på direkt.</span></li>
-    <li><b>Se det i ditt hem</b><span>Varje val visas i Vikingshöjds egna rum, i den färg du väljer.</span></li>
-    <li><b>Vi gör resten</b><span>Vi mäter, syr och monterar, så att allt är klart när du får nycklarna. Allt ingår i priset.</span></li></ol>
-    <button class="btn ibtn" id="intro-go2">Välj gardiner rum för rum</button>
+    <ol><li><b>Välj rum</b><span>Standardgardinen väljs direkt, och du ser priset.</span></li>
+    <li><b>Anpassa</b><span>Byt färg eller lägg till Laurie och band om du vill.</span></li>
+    <li><b>Betala</b><span>I Brittfurns kassa med kort, Klarna eller Swish.</span></li>
+    <li><b>Vi gör resten</b><span>Vi syr och monterar innan du flyttar in.</span></li></ol>
+    <button class="btn ibtn" id="intro-go2">Välj gardiner</button>
   </div>
 </section>
 <div id="app" class="appwrap">
