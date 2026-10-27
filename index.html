@@ -540,12 +540,13 @@ const isMob=()=>matchMedia('(max-width:767px)').matches;
 const FEW={verona:['31','04','22','23','05','32'], carina:['02','01','03','08','05','10']};
 function scrollTop(){ window.scrollTo({top:0}); if(window.parent!==window) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(e){} }
 function nextRoomId(){ const rs=roomsFor(state.house), i=rs.findIndex(x=>x.id===state.room); return i>=0&&i<rs.length-1 ? rs[i+1].id : null; }
-function openRoom(id){ state.room=id; state.view='open'; state.sv=0; const sr=state.sel[state.house][id]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } state.mstep='room'; render(); scrollTop(); }
+function openRoom(id){ try{ if(isMob()){ const st={vh:'room',room:id}; if(history.state&&history.state.vh==='room') history.replaceState(st,''); else history.pushState(st,''); } }catch(e){} state.room=id; state.view='open'; state.sv=0; const sr=state.sel[state.house][id]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } state.mstep='room'; render(); scrollTop(); }
 function houseTotal(){ const h=state.house; return roomsFor(h).reduce((a,r0)=>a+priceOf(roomFor(r0,h),state.sel[h][r0.id]),0); }
 function barInfo(){ const tot=houseTotal(), room=state.mstep==='room';
   const label = room ? (nextRoomId()?'Nästa rum →':'Klar · se alla rum') : (SHOP?'Till kassan':'Sammanställning');
   return {tot, label, disabled: !room && SHOP && !tot}; }
-function barAction(){ if(state.mstep==='room'){ const n=nextRoomId(); if(n) return openRoom(n); state.mstep='list'; render(); return scrollTop(); }
+function toList(){ if(history.state&&history.state.vh==='room'){ history.back(); return; } state.mstep='list'; render(); scrollTop(); }
+function barAction(){ if(state.mstep==='room'){ const n=nextRoomId(); if(n) return openRoom(n); return toList(); }
   if(SHOP){ const c=$('#checkout'); if(c) c.click(); } else $('#sum').scrollIntoView({behavior:'smooth'}); }
 function swatchGrid(fab, cur, kind, list){
   let few=false;
@@ -789,15 +790,15 @@ document.addEventListener('click',e=>{
   if(b.dataset.band){ s.bcolor=b.dataset.band; s.band=true; state.view='closed'; return render(); }
   if(b.id==='use-reco-band'){ s.bcolor=b.dataset.code; s.band=true; return render(); }
   if(b.id==='use-reco-sheer'){ s.lcolor=b.dataset.code; s.laurie=true; return render(); }
-  if(b.id==='intro-go'||b.id==='intro-go2'){ state.started=true; render(); window.scrollTo({top:0}); if(SHOP) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(err){} return; }
-  if(b.id==='back-intro'){ state.started=false; render(); window.scrollTo({top:0}); return; }
+  if(b.id==='intro-go'||b.id==='intro-go2'){ try{ history.pushState({vh:'app'},''); }catch(err){} state.started=true; state.mstep='list'; render(); window.scrollTo({top:0}); if(SHOP) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(err){} return; }
+  if(b.id==='back-intro'){ if(history.state&&history.state.vh==='app'){ history.back(); return; } state.started=false; render(); window.scrollTo({top:0}); return; }
   if(b.dataset.zoom){ const z=$('#zoom'); z.querySelector('img').src=b.dataset.zoom; z.hidden=false; z.querySelector('button').focus(); return; }
   if(b.id==='zoom-close'){ $('#zoom').hidden=true; return; }
   if(b.dataset.stage){ state.stage=b.dataset.stage; return render(); }
   if(b.dataset.more){ state.more=state.more||{}; state.more[b.dataset.more]=!state.more[b.dataset.more]; return render(); }
   if(b.dataset.h){ state.house=b.dataset.h; state.sv=0; return render(); }
   if(b.dataset.r){ if(isMob()) return openRoom(b.dataset.r); state.room=b.dataset.r; state.view='open'; state.sv=0; const sr=state.sel[state.house][b.dataset.r]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } render(); return; }
-  if(b.id==='m-back'){ state.mstep='list'; render(); scrollTop(); return; }
+  if(b.id==='m-back'){ toList(); return; }
   if(b.id==='m-bar'){ barAction(); return; }
   if(b.dataset.v){ state.view=b.dataset.v; return render(); }
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
@@ -841,6 +842,11 @@ function cartItems(){ const h=state.house, sel=state.sel[h];
 const postH=()=>{ if(window.parent===window) return; try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} };
 if(SHOP && 'ResizeObserver' in window) new ResizeObserver(postH).observe(document.body);
 matchMedia('(max-width:767px)').addEventListener('change',()=>render());
+window.addEventListener('popstate',e=>{ const s=e.state||{};
+  if(s.vh==='room'){ state.room=s.room; state.mstep='room'; state.started=true; }
+  else if(s.vh==='app'){ state.mstep='list'; state.started=true; }
+  else if(!EMBED){ state.started=false; state.mstep='list'; }
+  render(); scrollTop(); });
 window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-bar-click'){ barAction(); return; } if(d.type==='bf-checkout-error'){ const o=$('#copied'); if(o) o.textContent=d.message||'Något gick fel. Ring 08-661 70 80 så hjälper vi dig.'; const c=$('#checkout'); if(c) c.disabled=false; } if(d.type==='bf-house' && FILTER2HOUSE[d.filter] && FILTER2HOUSE[d.filter]!==state.house){ state.house=FILTER2HOUSE[d.filter]; state.sv=0; render(); } });
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
