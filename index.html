@@ -593,6 +593,8 @@ async function pixels(src,w,h){ const k=src+'|'+w+'x'+h; if(_pix[k]) return _pix
 async function fabricTile(src,tile){ const d=await pixels(src,tile,tile); const g=new Float32Array(tile*tile); let r=0,gg=0,b=0,m=0;
   for(let p=0;p<tile*tile;p++){const i=p*4; r+=d.data[i]; gg+=d.data[i+1]; b+=d.data[i+2]; g[p]=.2126*d.data[i]+.7152*d.data[i+1]+.0722*d.data[i+2]; m+=g[p];}
   const n=tile*tile; return {T:[r/n,gg/n,b/n], g, m:m/n}; }
+// Rummets ljus: tyget tar upp samma färgton som originalgardinen i bilden (varmt/rosa ljus), annars ser beige grönt ut.
+const TINT=.7;
 async function envBitmap(scene,s){
   const showSheer = s.laurie && SC[scene].sheer;
   const synth = s.laurie && !SC[scene].sheer && SC[scene].SP;
@@ -606,14 +608,14 @@ async function envBitmap(scene,s){
     if(!s.none){ const tile=Math.round(W/9), f=await fabricTile(`img/nara/${s.main}-${s.color}.jpg`,tile), lref=showSheer?SC[scene].lref2:SC[scene].lref;
       for(let y=0;y<H;y++)for(let x=0;x<W;x++){ const p=y*W+x, i=p*4, a=mask.data[i]/255; if(a<.01) continue;
         const L=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2], sh=Math.pow(L/lref,1.15), t=1+.35*(f.g[(y%tile)*tile+(x%tile)]/f.m-1);
-        for(let c=0;c<3;c++){ const v=Math.min(255,f.T[c]*sh*t); o[i+c]=d[i+c]*(1-a)+v*a; } } }
+        const Lt=Math.max(8,L); for(let c=0;c<3;c++){ const v=Math.min(255,f.T[c]*sh*t*Math.pow(d[i+c]/Lt,TINT)); o[i+c]=d[i+c]*(1-a)+v*a; } } }
     if(s.band && !s.none && SC[scene].band){ const bsrc=bandOf(s).img; const bim=await loadImg(bsrc); const BW=bim.naturalWidth, BH=bim.naturalHeight; const bd=await pixels(bsrc,BW,BH);
       const bw=Math.max(5,Math.round(SC[scene].bw*W)), rep=bw*BH/BW, lref=showSheer?SC[scene].lref2:SC[scene].lref, inset=Math.round(bw*.3);
       for(const [xt,yt,xb,yb,side] of SC[scene].band){ const y0=Math.max(0,Math.round(yt*H)), y1=Math.min(H-1,Math.round(yb*H));
         for(let y=y0;y<=y1;y++){ const ex=(xt+(xb-xt)*(y/H-yt)/((yb-yt)||1))*W; const v=Math.floor(((y-y0)%rep)/rep*BH);
           for(let u=0;u<bw;u++){ const x=Math.round(ex + side*(inset+u)); if(x<0||x>=W) continue; const p=y*W+x, i=p*4;
             const L=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2], sh=Math.min(1.25,Math.pow(L/lref,1.1)); const bu=Math.min(BW-1,Math.floor((side>0?u:bw-1-u)/bw*BW)), bi=(v*BW+bu)*4;
-            for(let c=0;c<3;c++) o[i+c]=Math.min(255,bd.data[bi+c]*sh); } } } }
+            const Lb=Math.max(8,L); for(let c=0;c<3;c++) o[i+c]=Math.min(255,bd.data[bi+c]*sh*Math.pow(d[i+c]/Lb,TINT)); } } } }
     if(synth){ const lc=colorOf('laurie',s.lcolor), Lc=lc.lab?lc.lab[0]:85; const f=await fabricTile('img/nara/laurie-'+s.lcolor+'.jpg',8); const T=f.T;
       const inP=(x,y,p)=>{let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const [xi,yi]=p[i],[xj,yj]=p[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c;}return c;};
       for(const poly of SC[scene].SP){ const xs=poly.map(q=>q[0]), ys=poly.map(q=>q[1]); const x0=Math.floor(Math.min(...xs)*W), x1=Math.ceil(Math.max(...xs)*W), y0=Math.floor(Math.min(...ys)*H), y1=Math.ceil(Math.max(...ys)*H); const per=Math.max(10,W*.012);
