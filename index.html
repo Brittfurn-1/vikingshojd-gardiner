@@ -833,8 +833,8 @@ document.addEventListener('change',e=>{
 const hov=e=>{ const b=e.target.closest&&e.target.closest('.sw'); if(!b) return; previewStage(b.dataset.fab,b.dataset.code,b.dataset.kind); };
 const out=e=>{ const b=e.target.closest&&e.target.closest('.sw'); if(!b) return; if(e.relatedTarget&&b.contains(e.relatedTarget)) return; restoreStage(); };
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ const z=$('#zoom'); if(z&&!z.hidden) z.hidden=true; } });
-document.addEventListener('mouseover',hov); document.addEventListener('mouseout',out);
-document.addEventListener('focusin',hov); document.addEventListener('focusout',out);
+// Förhandsvisning bara med riktig muspekare: på pekskärmar (iPhone) gör hover-ändringen att första trycket inte blir ett klick.
+if(matchMedia('(hover:hover) and (pointer:fine)').matches){ document.addEventListener('mouseover',hov); document.addEventListener('mouseout',out); document.addEventListener('focusin',hov); document.addEventListener('focusout',out); }
 /* ---------- Inbäddning i Vikingshöjds tillvalsportal ---------- */
 const FILTER2HOUSE={'parhus-1-5-136-a':'A','parhus-1-5-131-b':'B','parhus-6-7-136-a':'C','parhus-6-7-131-b':'D','minivilla':'M'};
 const SHOP=new URLSearchParams(location.search).has('shop');
