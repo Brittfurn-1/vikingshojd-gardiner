@@ -593,9 +593,9 @@ function compareSet(r,s){
     ...['02','05','08'].map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Carina '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
     {s:{...base,main:'verona',color:vc,laurie:false,band:false}, view:'closed', title:'Verona', sub:colorOf('verona',vc).name+' · utan band', tag:'Alternativ A'},
-    {s:{...base,main:'verona',color:vc,laurie:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Verona + Laurie', sub:'Dubbel uppsättning med dubbla skenor: Verona-gardinen och den tunna, skira Laurie som skyddar mot insyn', tag:'Alternativ B'}
+    {s:{...base,main:'verona',color:vc,laurie:true,band:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Verona + Laurie', sub:'Dubbel uppsättning med dubbla skenor: Verona-gardinen och den tunna, skira Laurie som skyddar mot insyn', tag:'Alternativ B'}
   ];
-  return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov) && (c.s.band!==false || !s.band)}));
+  return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov) && (typeof c.s.band!=='boolean' || r.sov || c.s.band===!!s.band)}));
 }
 const SCENE={'vr-gavel':'vardagsrum','kok-gavel':'vardagsrum','vr-lang':'vardagsrum','kok-lang':'matplats','allrum':'allrum','passage':'allrum','sov1':'sovrum','sov2':'sovrum','sov3':'sovrum','master':'sovrum'};
 
@@ -844,7 +844,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
   if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
   if(b.dataset.cmp){ const r0=roomById(state.room), c=compareSet(r0,s)[+b.dataset.cmp];
-    Object.assign(s,{none:false,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; state.view=c.view; return render(); }
+    Object.assign(s,{none:false,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; if(typeof c.s.band==='boolean' && !r0.sov) s.band=c.s.band; state.view=c.view; return render(); }
   if(b.classList.contains('sw')){ if(b.dataset.kind==='main'){ s.color=b.dataset.code; if(s.laurie) fitSheer(s); state.view=s.laurie?'sheer':'closed'; } else { s.lcolor=b.dataset.code; state.view='sheer'; } return render(); }
   if(b.id==='apply-similar'){ const r=roomById(state.room); for(const x of roomsFor(state.house)) if(!!x.sov===!!r.sov) sel[x.id]={...s}; return render(); }
   if(b.id==='reset'){ state.sel[state.house]=defaults(state.house); return render(); }
