@@ -592,10 +592,10 @@ function compareSet(r,s){
   const list = r.sov ? [
     ...['02','05','08'].map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Carina '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
-    {s:{...base,main:'verona',color:vc,laurie:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Verona + Laurie', sub:'Dubbel uppsättning med dubbla skenor: Verona-gardinen och den tunna, skira Laurie som skyddar mot insyn', tag:'Rekommenderad'},
-    {s:{...base,main:'verona',color:vc,laurie:false}, view:'closed', title:'Verona', sub:colorOf('verona',vc).name, tag:'Förslag'}
+    {s:{...base,main:'verona',color:vc,laurie:false,band:false}, view:'closed', title:'Verona', sub:colorOf('verona',vc).name+' · utan band', tag:'Alternativ A'},
+    {s:{...base,main:'verona',color:vc,laurie:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Verona + Laurie', sub:'Dubbel uppsättning med dubbla skenor: Verona-gardinen och den tunna, skira Laurie som skyddar mot insyn', tag:'Alternativ B'}
   ];
-  return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov)}));
+  return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov) && (c.s.band!==false || !s.band)}));
 }
 const SCENE={'vr-gavel':'vardagsrum','kok-gavel':'vardagsrum','vr-lang':'vardagsrum','kok-lang':'matplats','allrum':'allrum','passage':'allrum','sov1':'sovrum','sov2':'sovrum','sov3':'sovrum','master':'sovrum'};
 
@@ -706,7 +706,7 @@ function renderDetail(){
     </div>
     <section class="compare" aria-label="Jämför tyger">
       <span class="label">Jämför i det här rummet</span>
-      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard${c.tag==='Rekommenderad'?' rec':''}" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
+      <div class="cmp">${compareSet(r0,s).map((c,i)=>`<button class="cmpcard" id="cmp-${i}" data-cmp="${i}" aria-pressed="${c.active}">${c.tag?'<span class="cmptag">'+c.tag+'</span>':''}
         <span class="cth"><canvas class="cmpcv" data-i="${i}"></canvas></span><b>${c.title}</b><small>${c.sub}</small>${c.active?'<span class="cmpsel">✓ Valt</span>':''}<span class="cmppr"><s class="ord">${fmt(ordOf(r,c.s))}</s> ${fmt(priceOf(r,c.s))}</span></button>`).join('')}</div>
     </section>
     ${(()=>{ const lines=[], w=r.ws.length>1?' · '+r.ws.length+' fönster':'';
