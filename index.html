@@ -317,7 +317,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
     <img src="img/miljo/verona-sv2.jpg" alt="Verona i ett ljust hem med stora fönster mot grönska">
     <div class="ihero-txt">
       <h1>Gardiner sydda för ditt nya hem på Vikingshöjd</h1>
-      <p>För ditt nya hem på Vikingshöjd har vi tagit fram en gardinkollektion som sys för hand i vår egen produktion, efter husens ritningar och fönstrens exakta mått. Som köpare får du <b>20 % på tyg, band och takskena</b><span class="vh-slut"></span>. Vi tar hand om måttagning, sömnad och montering, så att gardinerna hänger på plats när du flyttar in.</p>
+      <p>För ditt nya hem på Vikingshöjd har vi tagit fram en gardinkollektion som sys för hand i vår egen produktion, efter husens ritningar och fönstrens exakta mått. Som köpare får du <b>20 % på tyg och takskena</b><span class="vh-slut"></span>. Vi tar hand om måttagning, sömnad och montering, så att gardinerna hänger på plats när du flyttar in.</p>
       <button class="btn ibtn" id="intro-go">Välj gardiner till ditt hus</button>
     </div>
   </div>
@@ -331,13 +331,13 @@ p.allwin{margin:4px 0 0;font-size:14px}
     <article><img src="img/miljo/verona-sv1.jpg" alt="Verona" loading="lazy"><div><h2>Verona – för vardagsrum och öppna ytor</h2><p>Verona har linnets lätt ojämna, levande yta och ett mjukt fall. Vi föreslår den i vardagsrum, kök och allrum.</p><small>35 färger · flamskyddad · 295 cm</small></div></article>
     <article><img src="img/miljo/carina-nott.jpg" alt="Carina" loading="lazy"><div><h2>Carina – för sovrummets lugn</h2><p>Carina mörklägger helt utan extra foder. Tyget stänger ute ljuset även under ljusa sommarnätter.</p><small>11 färger · 280 cm</small></div></article>
     <article><img src="img/miljo/laurie-kenza.jpg" alt="Laurie" loading="lazy"><div><h2>Laurie – en skir gardin närmast fönstret</h2><p>Laurie släpper in dagsljuset men håller blickarna ute. Den hänger på en egen, dold skena närmast glaset, med huvudgardinen framför på kvällen.</p><small>24 färger · flamskyddad Trevira CS · 297 cm · tillval</small></div></article>
-    <article class="ihera"><div class="iband" aria-hidden="true"><span style="background-image:url('img/hera-9100-h.jpg')"></span><span style="background-image:url('img/hera-9300-h.jpg')"></span><span style="background-image:url('img/hera-9400-h.jpg')"></span><span style="background-image:url('img/hera-9600-h.jpg')"></span><span style="background-image:url('img/hera-9900-h.jpg')"></span><span style="background-image:url('img/hera-9910-h.jpg')"></span></div><div><h2>Hera – broderad detalj längs kanten</h2><p>Hera är ett broderat band längs gardinens framkant, från skenan till golvet. Det syns både när gardinen är öppen och när den är fördragen.</p><small>53 mm · sex färger: Flaxen, Nectare, Orchid, Sapphire, Anise, Shadow · tillval</small></div></article>
+    
     <article class="ihera"><img src="img/skena/rum.jpg" alt="Takskena i ett rum" loading="lazy"><div><h2>Takskenan – låt gardinen löpa förbi fönstret</h2><p>Den slimmade aluminiumskenan monteras direkt i taket och fortsätter förbi fönstret, så att gardinen kan dras helt åt sidan. Tyget glider tyst i jämna wave-veck.</p><small>8 × 25 mm · svart</small></div></article>
   </div>
   <div class="isteps">
     <h2>Så går det till</h2>
     <ol><li><b>Välj rum</b><span>Se gardinerna och priset för ditt hus.</span></li>
-    <li><b>Anpassa</b><span>Välj färg, innergardin, band och skena för varje rum.</span></li>
+    <li><b>Anpassa</b><span>Välj tyg, färg och skena för varje rum.</span></li>
     <li><b>Betala</b><span>Slutför beställningen med kort, Klarna eller Swish.</span></li>
     <li><b>Vi gör resten</b><span>Vi måttar, syr och monterar före inflyttningen.</span></li></ol>
     <button class="btn ibtn" id="intro-go2">Välj gardiner till ditt hus</button>
@@ -351,7 +351,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
       <h1>Välj gardiner <em>rum för rum</em></h1>
       <ul class="vp">
         <li><b>Handsytt för ditt hus.</b> Tillverkat i vår egen produktion efter husets ritningar och mått.</li>
-        <li><b>20 % för dig på Vikingshöjd.</b> Gäller tyg, band och takskena<span class="vh-slut"></span>.</li>
+        <li><b>20 % för dig på Vikingshöjd.</b> Gäller tyg och takskena<span class="vh-slut"></span>.</li>
         <li><b>Klart vid inflyttning.</b> Måttagning, sömnad och montering ingår.</li>
       </ul>
       <p class="lede">Välj tyg och färg för varje fönster och se direkt hur det blir.</p>
@@ -376,6 +376,7 @@ const DATA = {"verona":{"name":"Verona","desc":"Linnets levande yta. Flamskyddad
 const BAND_PRICE = 3500; // ordinarie
 const DISC=.20; // Vikingshöjd-rabatt, gäller bara tyget
 const dp=n=>Math.round(n*(1-DISC)/100)*100;
+const BAND_ON=false; // Hera-band som tillval (av sedan 2026-11-02)
 const SY_VAD=1850; // sömnad per våd
 const KUDDAR=[{id:'30x50',p:165},{id:'40x40',p:169},{id:'50x50',p:219},{id:'40x60',p:280},{id:'50x75',p:300},{id:'60x60',p:325},{id:'70x70',p:559},{id:'50x90',p:605,fill:'ankfjäder'},{id:'80x80',p:700}]; // Norsk Dun, ordinarie pris, ingen rabatt
 const kudSel=()=>{ state.kud=state.kud||{}; return state.kud[state.house]=state.kud[state.house]||{}; };
@@ -398,11 +399,11 @@ const HOUSES = {
 // Mått i cm. x = öppningens start räknat från skenans vänstra ände. Fält kan vara {A:..,B:..} per hustyp.
 const SOVSC=['sovrum'], CROP_SOV=[.3,.05,1,.95];
 const ROOMS = [
-  {id:'vardagskok', houses:['A','B','C','D'], plan:'Nedre plan', name:'Vardagsrum & kök', part:'', scenes:['vardagsrum'], label:'Vardagsrum och kök', crop:[0,.1,1,.95], bandDefault:true, windows:[
-    {part:'Vardagsrum, långsida', win:'Fönster 240 × 150 cm', L:300, op:[{x:30,w:240,s:80,h:150}], base:17200, laurie:11500, k:[10900,3700,1400,1200,6,2], lk:[5900,3700,1400,500,6,2]},
-    {part:'Vardagsrum, gavel', win:'Fönster 280 × 240 cm', L:340, op:[{x:30,w:280,s:0,h:240}], base:17300, laurie:11600, k:[10900,3700,1500,1200,6,2], lk:[5900,3700,1500,500,6,2]},
-    {part:'Kök, gavel mot altan', win:'Altandörr 200 × 240 + fönster 120 × 240 cm', L:360, op:[{x:30,w:200,s:0,h:240,door:true},{x:230,w:120,s:0,h:240}], base:17300, laurie:16550, k:[10900,3700,1500,1200,6,2], lk:[8900,5550,1600,500,9,3]},
-    {part:'Kök, långsida', win:'Fönster 230 × 240 cm', L:270, op:[{x:12,w:230,s:0,h:240}], base:17100, laurie:11400, k:[10900,3700,1300,1200,6,2], lk:[5900,3700,1300,500,6,2]}]},
+  {id:'vardagskok', houses:['A','B','C','D'], plan:'Nedre plan', name:'Vardagsrum & kök', part:'', scenes:['vardagsrum'], label:'Vardagsrum och kök', crop:[0,.1,1,.95], bandDefault:false, windows:[
+    {part:'Vardagsrum, långsida', win:'Fönster 240 × 150 cm', L:300, op:[{x:30,w:240,s:80,h:150}], base:17200, laurie:12200, k:[10900,3700,1400,1200,6,2], lk:[5900,3700,1400,1200,6,2]},
+    {part:'Vardagsrum, gavel', win:'Fönster 280 × 240 cm', L:340, op:[{x:30,w:280,s:0,h:240}], base:17300, laurie:12300, k:[10900,3700,1500,1200,6,2], lk:[5900,3700,1500,1200,6,2]},
+    {part:'Kök, gavel mot altan', win:'Altandörr 200 × 240 + fönster 120 × 240 cm', L:360, op:[{x:30,w:200,s:0,h:240,door:true},{x:230,w:120,s:0,h:240}], base:17300, laurie:12300, k:[10900,3700,1500,1200,6,2], lk:[5900,3700,1500,1200,6,2]},
+    {part:'Kök, långsida', win:'Fönster 230 × 240 cm', L:270, op:[{x:12,w:230,s:0,h:240}], base:17100, laurie:12100, k:[10900,3700,1300,1200,6,2], lk:[5900,3700,1300,1200,6,2]}]},
   {id:'sov3', houses:['A','B','C','D'], plan:'Nedre plan', name:{A:'Sovrum 3 · 10,0 m²',B:'Sovrum 3 · 10,0 m²',C:'Sovrum · 10,0 m²',D:'Sovrum · 8,0 m²'}, part:'', sov:true, scenes:['sov3'], crop:[.15,.08,.85,.85], windows:[
     {win:'Fönster 140 × 150 cm', L:200, op:[{x:30,w:140,s:80,h:150}], base:16600, laurie:11300, k:[10500,3700,1200,1200,6,2], lk:[5900,3700,1200,500,6,2]}]},
   {id:'sov1', houses:['A','B'], plan:'Övre plan', name:'Sovrum 1 · 10,4 m²', part:'', sov:true, scenes:['sov1'], crop:[.15,.08,.85,.85], windows:[
@@ -421,7 +422,7 @@ const ROOMS = [
     {win:{A:'Fönster 245 × 180 cm',B:'Fönster 245 × 180 cm',C:'Fönster ca 245 × 180 cm',D:'Fönster ca 230 × 180 cm'}, L:300, op:[{x:27,w:245,s:50,h:180}], base:17200, laurie:11500, k:[10900,3700,1400,1200,6,2], lk:[5900,3700,1400,500,6,2]}]},
   {id:'passage', houses:['A','B'], plan:'Övre plan', name:'Passage', part:'gavel', scenes:['passage'], crop:[.15,.05,.85,.85], windows:[
     {win:'Fönster 125 × 240 cm', L:185, op:[{x:30,w:125,s:0,h:240}], base:17000, laurie:11300, k:[10900,3700,1200,1200,6,2], lk:[5900,3700,1200,500,6,2]}]},
-  {id:'mvvard', houses:['M'], plan:'Övre plan', name:'Vardagsrum & kök', part:'', scenes:['mv-vardagsrum'], crop:[.3,.08,1,.8], bandDefault:true, windows:[
+  {id:'mvvard', houses:['M'], plan:'Övre plan', name:'Vardagsrum & kök', part:'', scenes:['mv-vardagsrum'], crop:[.3,.08,1,.8], bandDefault:false, windows:[
     {win:'Fönster ca 315 × 150 cm', L:375, op:[{x:30,w:315,s:80,h:150}], base:23050, laurie:15650, k:[14700,5550,1600,1200,8.1,3], lk:[8000,5550,1600,500,8.1,3]}]},
   {id:'mvsov1', houses:['M'], plan:'Nedre plan', name:'Stort sovrum · 12,4 m²', part:'', sov:true, scenes:['mv-sovrum'], crop:[.15,.1,.95,.85], windows:[
     {win:'Fönster ca 245 × 150 cm', L:305, op:[{x:30,w:245,s:70,h:150}], base:15800, laurie:10900, k:[9500,3700,1400,1200,5.4,2], lk:[5300,3700,1400,500,5.4,2]}]},
@@ -469,7 +470,7 @@ function defaults(h){
 }
 let state={house:'A', room:'vardagskok', view:'open', sv:0, sel:{A:defaults('A'),B:defaults('B')}};
 try{ const s=JSON.parse(localStorage.getItem('vh-gardin-v4')||'null'); if(s&&s.sel&&s.sel.A) state={...state,...s}; }catch(e){}
-function ensureHouse(){ const h=state.house; if(!state.sel[h]) state.sel[h]=defaults(h); const d=defaults(h); for(const k in d){ if(!state.sel[h][k]) state.sel[h][k]=d[k]; if(roomById(k)&&roomById(k).sov) state.sel[h][k].laurie=false; } if(!roomsFor(h).some(r=>r.id===state.room)) state.room=roomsFor(h)[0].id; }
+function ensureHouse(){ const h=state.house; if(!state.sel[h]) state.sel[h]=defaults(h); const d=defaults(h); for(const k in d){ if(!state.sel[h][k]) state.sel[h][k]=d[k]; if(roomById(k)&&roomById(k).sov) state.sel[h][k].laurie=false; if(!BAND_ON) state.sel[h][k].band=false; } if(!roomsFor(h).some(r=>r.id===state.room)) state.room=roomsFor(h)[0].id; }
 const save=()=>{ try{localStorage.setItem('vh-gardin-v4',JSON.stringify(state))}catch(e){} };
 
 function ordOf(r,s){
@@ -592,10 +593,10 @@ function compareSet(r,s){
   const list = r.sov ? [
     ...['02','05','08'].map(code=>({s:{...base,main:'carina',color:code}, view:'closed', title:'Carina '+colorOf('carina',code).name, sub:'Mörkläggande'}))
   ] : [
-    {s:{...base,main:'verona',color:vc,laurie:false,band:false}, view:'closed', title:'Verona', sub:colorOf('verona',vc).name+' · utan band', tag:'Alternativ A'},
-    {s:{...base,main:'verona',color:vc,laurie:true,band:true,lcolor:(()=>{ const top=sheerTop({...s,main:'verona',color:vc}).map(x=>x.c.code); return s.laurie&&top.includes(s.lcolor)?s.lcolor:top[0]; })()}, view:'sheer', title:'Verona + Laurie', sub:'Dubbel uppsättning med dubbla skenor: Verona-gardinen och den tunna, skira Laurie som skyddar mot insyn', tag:'Alternativ B'}
+    {s:{...base,main:'verona',color:vc,laurie:false,band:false}, view:'closed', title:'Verona', sub:colorOf('verona',vc).name, tag:'Alternativ A'},
+    {s:{...base,main:'verona',color:vc,none:true,laurie:true,band:false,lcolor:s.lcolor||'14'}, view:'sheer', title:'Laurie', sub:colorOf('laurie',s.lcolor||'14').name+' · tunn, skir gardin som släpper in ljuset och skyddar mot insyn', tag:'Alternativ B'}
   ];
-  return list.map(c=>({...c, active: !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov) && (typeof c.s.band!=='boolean' || r.sov || c.s.band===!!s.band)}));
+  return list.map(c=>({...c, active: c.s.none ? (!!s.none && !!s.laurie && !r.sov) : !s.none && c.s.main===s.main && c.s.color===s.color && !!c.s.laurie===!!(s.laurie&&!r.sov) && (typeof c.s.band!=='boolean' || r.sov || c.s.band===!!s.band)}));
 }
 const SCENE={'vr-gavel':'vardagsrum','kok-gavel':'vardagsrum','vr-lang':'vardagsrum','kok-lang':'matplats','allrum':'allrum','passage':'allrum','sov1':'sovrum','sov2':'sovrum','sov3':'sovrum','master':'sovrum'};
 
@@ -721,12 +722,12 @@ function renderDetail(){
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
         if(mob && !mo.build) return `<section class="build compact"><button class="buildtoggle" data-more="build" aria-expanded="false"><span>Totalt för rummet</span><span class="pr">${sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':''}<b>${fmt(sumd)}</b></span><small>Visa vad som ingår ▾</small></button></section>`;
-        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg, band och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}${mob?'<button class="buildtoggle less" data-more="build" aria-expanded="true"><small>Dölj detaljer ▴</small></button>':''}</section>`; })()}
-    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>Färg, '+(r.sov?'':'Laurie, ')+'band och skena</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
+        return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}${mob?'<button class="buildtoggle less" data-more="build" aria-expanded="true"><small>Dölj detaljer ▴</small></button>':''}</section>`; })()}
+    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>Färg, '+(r.sov?'':'Laurie, ')+(BAND_ON?'band och skena':'och skena')+'</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
     ${(()=>{ if(mob && !mo.fler) return ''; return `
     <section class="opt">
       <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
-      <p class="note mhide">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg, band och takskena; överstruket är ordinarie pris.</p>
+      <p class="note mhide">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg och takskena; överstruket är ordinarie pris.</p>
       ${s.none?'':`<ul class="buildlist pricebreak"><li><span>Tyg, ${String(r.k[4]).replace('.',',')} m</span><span class="pr"><s class="ord">${fmt(r.k[0])}</s> ${fmt(dp(r.k[0]))}</span></li><li><span>Sömnad med wave-veck, ${r.k[5]} våder à ${fmt(SY_VAD)}</span><span class="pr">${fmt(r.k[1])}</span></li><li><span>Takskena</span><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}</span></li><li><span>Montering och installation</span><span class="pr">${fmt(r.k[3])}</span></li></ul>`}
       ${r.ws.length>1?`<p class="note mhide">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
       ${r.sov?`<p class="note">Sovrummen får Carina, som mörklägger helt utan foder, så rummet blir mörkt även en ljus natt i juni. Sydd med wave-veck.</p>`:''}
@@ -751,7 +752,7 @@ function renderDetail(){
       ${(()=>{ return ''; const R=recommend(s), rc=R.sheer; if(!rc||!s.laurie) return ''; const on=s.lcolor===rc.c.code, cl=cm(rc.c.lab);
         return `<div class="reco"><span class="recodot" style="background-image:url('${rc.c.img}');background-color:${rc.c.hex}"></span><span><b>Brittfurn Colour Match föreslår Laurie ${rc.c.name}</b><small>${rc.kat} till ${DATA[s.main].name} ${colorOf(s.main,s.color).name}: samma ${cl.und} underton${cl.L>R.m.L?' och en ljusare ton som låter dagsljuset flöda':''}.</small></span>${on&&s.laurie?'<span class="recook">Vald</span>':'<button class="btn ghost" id="use-reco-sheer" data-code="'+rc.c.code+'">Välj</button>'}</div>`; })()}
     </section>`}
-    <section class="opt">
+    ${BAND_ON?`<section class="opt">
       <div class="morerow">
         ${plusBtn('band','vad tillvalet innebär')}
         <label class="check" for="chk-band"><input type="checkbox" id="chk-band" ${s.band?'checked':''} ${s.none?'disabled':''}>
@@ -763,9 +764,9 @@ function renderDetail(){
       ${s.band?'':'<!--'}<div class="bands" role="group" aria-label="Bandfärg">${DATA.bands.map(b=>`<button class="bandsw" id="band-${b.code}" data-band="${b.code}" aria-pressed="${s.band&&(s.bcolor||'9900')===b.code}"><span style="background-image:url('${b.imgH}')"></span><small>${b.name}${recommend(s).band&&recommend(s).band.b.code===b.code?' · förslag':''}</small></button>`).join('')}</div>${s.band?'':'-->'}
       ${moreBox('band',`<p>Bandet sys på huvudgardinen, Verona eller Carina, aldrig på den skira Laurie. Det sitter längs kanten där de två gardinerna möts, från skenan ner till golvet: ett band per gardin, två per fönster. Det ger gardinen en skräddarsydd ram och syns både när gardinen är dragen och när den är öppen. Mönstret är broderat på naturfärgad botten, och broderiet finns i sex färger.</p>
         <p class="note">I priset ingår två band à 280 cm och påsyddnad per fönster${r.ws.length>1?' ('+r.ws.length+' fönster)':''}.</p>`)}
-    </section>
+    </section>`:''}
     <section class="opt">
-      <div class="opt-h"><h3>${r.sov?'3':'4'}. Takskena</h3><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
+      <div class="opt-h"><h3>${(r.sov?3:4)-(BAND_ON?0:1)}. Takskena</h3><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
       <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Smal takskena i aluminium, 8 × 25 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. Priset gäller en skena per fönster, med 20 % Vikingshöjd-rabatt${r.sov?'':'; väljer du till Laurie ingår en andra, dold skena innanför i Lauries pris'}. Färg svart. Takfästen, ändskydd, wave-glid och waveband ingår.</small></span></div>
       <div class="rails" role="group" aria-label="Skenans finish"${RAILS.length>1?'':' hidden'}>${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'58')===x.code}"><span style="background-image:url('${x.img}')"></span><small>${x.name}</small></button>`).join('')}</div>
       ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>${railOf(s).name}</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med ändskydd. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
@@ -786,7 +787,7 @@ function summaryText(){
     const c=colorOf(s.main,s.color), l=colorOf('laurie',s.lcolor);
     t+=`${r.name}${r.part?' – '+r.part:''}: ${s.none?'Ingen gardin':DATA[s.main].name+' '+c.name+''}${s.laurie?' + Laurie '+l.name:''}${s.band&&!s.none?' + Hera-band '+bandOf(s).name:''}${s.none?'':', skena '+railOf(s).name.toLowerCase()} – ${fmt(p)}\n`; }
   for(const x of kudRows()){ t+=`${kudName(x.k)} (Norsk Dun), ${x.n} st à ${fmt(x.k.p)} – ${fmt(x.sum)}\n`; tot+=x.sum; ord+=x.sum; }
-  return t+`\nOrdinarie pris: ${fmt(ord)}${ord>tot?`\nVikingshöjd-rabatt 20 % på tyg, band och skena: −${fmt(ord-tot)}`:''}\nTotalt: ${fmt(tot)} inkl. moms`;
+  return t+`\nOrdinarie pris: ${fmt(ord)}${ord>tot?`\nVikingshöjd-rabatt 20 % på tyg och skena: −${fmt(ord-tot)}`:''}\nTotalt: ${fmt(tot)} inkl. moms`;
 }
 function renderSum(){
   const h=state.house, sel=state.sel[h]; let tot=0, ord=0;
@@ -795,10 +796,10 @@ function renderSum(){
     + kudRows().map(x=>{ tot+=x.sum; ord+=x.sum; return `<li><b>${kudName(x.k)}</b><span class="pr">${fmt(x.sum)}</span><small>Norsk Dun · ${x.n} st à ${fmt(x.k.p)}</small></li>`; }).join('');
   const kq=kudSel(), kOpen=!!(state.more&&state.more.kud)||kudRows().length>0;
   const kudBox=!kudOn()?'':`<div class="kud"><div class="kud-h"><span><b>Innerkuddar från Norsk Dun</b><small class="note" style="display:block">Tillval · dun, 50×90 i ankfjäder</small></span>${plusBtn('kud','innerkuddar')}</div>${kOpen?`<ul class="kudlist">${KUDDAR.map(k=>{ const n=kq[k.id]||0; return `<li><span>${k.id.replace('x','×')} cm${k.fill?' · '+k.fill:''}<small>${fmt(k.p)}</small></span><span class="qty"><button data-kud="${k.id}" data-d="-1" aria-label="Färre ${k.id}" ${n?'':'disabled'}>−</button><output aria-label="Antal ${k.id}">${n}</output><button data-kud="${k.id}" data-d="1" aria-label="Fler ${k.id}">+</button></span></li>`; }).join('')}</ul><p class="note" style="margin:0">Ordinarie pris, Vikingshöjd-rabatten gäller inte kuddar.</p>`:''}</div>`;
-  $('#sum').innerHTML=`<div><h3>Dina gardiner till Vikingshöjd</h3><span class="label">${HOUSES[h].sub}, ${HOUSES[h].label}</span><p class="note" style="margin:8px 0 0">Här ser du dina val rum för rum och det sammanlagda priset. Din förmån som köpare på Vikingshöjd är redan avdragen: 20 % på tyg, band och takskena. Måttagning, sömnad och montering ingår. Alla priser är inklusive moms.</p></div>
+  $('#sum').innerHTML=`<div><h3>Dina gardiner till Vikingshöjd</h3><span class="label">${HOUSES[h].sub}, ${HOUSES[h].label}</span><p class="note" style="margin:8px 0 0">Här ser du dina val rum för rum och det sammanlagda priset. Din förmån som köpare på Vikingshöjd är redan avdragen: 20 % på tyg och takskena. Måttagning, sömnad och montering ingår. Alla priser är inklusive moms.</p></div>
     ${items?'<ul class="sumlist">'+items+'</ul>':'<p class="note">Inga rum valda ännu. Klicka på ett rum så väljs standardgardinen, och priset byggs på här.</p>'}
     ${kudBox}
-    ${tot&&ord>tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg, band och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
+    ${tot&&ord>tot?'<dl class="disc"><div><dt>Ordinarie pris</dt><dd>'+fmt(ord)+'</dd></div><div><dt>Vikingshöjd-rabatt 20 % på tyg och skena</dt><dd>−'+fmt(ord-tot)+'</dd></div></dl>':''}<div class="total"><span>Totalt</span><span class="pr">${fmt(tot)}</span></div>
     <span class="incl">Inkl. moms. Måttagning, sömnad, takskena och montering ingår i gardinerna.</span>
     ${SHOP?`<div class="actions"><button class="btn" id="checkout" ${tot?'':'disabled'}>Till kassan</button></div>
     <span class="copied" id="copied" aria-live="polite"></span>
@@ -844,7 +845,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
   if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
   if(b.dataset.cmp){ const r0=roomById(state.room), c=compareSet(r0,s)[+b.dataset.cmp];
-    Object.assign(s,{none:false,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; if(typeof c.s.band==='boolean' && !r0.sov) s.band=c.s.band; state.view=c.view; return render(); }
+    Object.assign(s,{none:!!c.s.none,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; if(typeof c.s.band==='boolean' && !r0.sov) s.band=BAND_ON&&c.s.band; state.view=c.view; return render(); }
   if(b.classList.contains('sw')){ if(b.dataset.kind==='main'){ s.color=b.dataset.code; if(s.laurie) fitSheer(s); state.view=s.laurie?'sheer':'closed'; } else { s.lcolor=b.dataset.code; state.view='sheer'; } return render(); }
   if(b.id==='apply-similar'){ const r=roomById(state.room); for(const x of roomsFor(state.house)) if(!!x.sov===!!r.sov) sel[x.id]={...s}; return render(); }
   if(b.id==='reset'){ state.sel[state.house]=defaults(state.house); return render(); }
@@ -892,7 +893,7 @@ window.addEventListener('message',e=>{ const d=e.data||{}; if(d.type==='bf-bar-c
 function postToPortal(){ if(!EMBED||window.parent===window) return; const h=state.house, sel=state.sel[h];
   const items=roomsFor(h).map(r0=>{ const r=roomFor(r0,h), s=sel[r.id], p=priceOf(r,s); if(!p) return null; const c=colorOf(s.main,s.color);
     const parts=[]; if(!s.none) parts.push(DATA[s.main].name+' '+c.name+', måttsydd wave på takskena'); if(s.laurie) parts.push('Laurie '+colorOf('laurie',s.lcolor).name); if(s.band&&!s.none) parts.push('Hera-band '+bandOf(s).name); if(!s.none) parts.push('skena '+railOf(s).name.toLowerCase());
-    return {id:'bf-gardin-'+r.id, name:'Gardiner – '+r.name, price:p, description:parts.join(' · ')+(r.ws.length>1?' ('+r.ws.length+' fönster)':'')+' · ord. pris '+fmt(ordOf(r,s))+', 20 % Vikingshöjd-rabatt på tyg, band och skena'}; }).filter(Boolean);
+    return {id:'bf-gardin-'+r.id, name:'Gardiner – '+r.name, price:p, description:parts.join(' · ')+(r.ws.length>1?' ('+r.ws.length+' fönster)':'')+' · ord. pris '+fmt(ordOf(r,s))+', 20 % Vikingshöjd-rabatt på tyg och skena'}; }).filter(Boolean);
   for(const x of kudRows()) items.push({id:'bf-kudde-'+x.k.id, name:kudName(x.k)+' (Norsk Dun)', price:x.sum, description:x.n+' st à '+fmt(x.k.p)+' · ordinarie pris'});
   try{ window.parent.postMessage({type:'bf-gardiner', house:h, items, height:document.documentElement.scrollHeight},'*'); }catch(e){} }
 if(EMBED && 'ResizeObserver' in window){ new ResizeObserver(()=>{ try{ window.parent.postMessage({type:'bf-gardiner-height', height:document.documentElement.scrollHeight},'*'); }catch(e){} }).observe(document.body); }
