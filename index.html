@@ -717,13 +717,13 @@ function renderDetail(){
           lines.push(['Montering och installation', r.k[3], r.k[3]]); }
         if(s.laurie&&!r.sov){ lines.push(['Laurie '+colorOf('laurie',s.lcolor).name+' · tyg, '+String(r.lk[4]).replace('.',',')+' m'+w, r.lk[0], dp(r.lk[0])]);
           lines.push(['Laurie · sömnad, '+r.lk[5]+' våder à '+fmt(SY_VAD), r.lk[1], r.lk[1]]);
-          lines.push(['Laurie · egen dold takskena', r.lk[2], dp(r.lk[2])]);
+          lines.push([s.none?'Takskena, '+railOf(s).name.toLowerCase():'Laurie · egen dold takskena', r.lk[2], dp(r.lk[2])]);
           lines.push(['Laurie · montering och installation', r.lk[3], r.lk[3]]); }
         if(s.band&&!s.none) lines.push(['Hera-band '+bandOf(s).name+w, BAND_PRICE*r.ws.length, dp(BAND_PRICE*r.ws.length)]);
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
         if(mob && !mo.build) return `<section class="build compact"><button class="buildtoggle" data-more="build" aria-expanded="false"><span>Totalt för rummet</span><span class="pr">${sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':''}<b>${fmt(sumd)}</b></span><small>Visa vad som ingår ▾</small></button></section>`;
         return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}${mob?'<button class="buildtoggle less" data-more="build" aria-expanded="true"><small>Dölj detaljer ▴</small></button>':''}</section>`; })()}
-    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>Färg, '+(r.sov?'':'Laurie, ')+(BAND_ON?'band och skena':'och skena')+'</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
+    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>'+(BAND_ON?'Färg, '+(r.sov?'':'Laurie, ')+'band och skena':(r.sov?'Färg och skena':'Färg, Laurie och skena'))+'</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
     ${(()=>{ if(mob && !mo.fler) return ''; return `
     <section class="opt">
       <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
