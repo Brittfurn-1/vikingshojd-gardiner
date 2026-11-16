@@ -192,15 +192,16 @@ p.allwin{margin:4px 0 0;font-size:14px}
 @media (max-width:767px){.embed .grid{grid-template-columns:minmax(0,1fr)}}
 [hidden]{display:none!important}
 .intro{display:flex;flex-direction:column;gap:48px;padding-block:8px 24px}
-.ihero{position:relative;border-radius:8px;overflow:hidden;min-height:520px;display:flex;align-items:flex-end}
-.ihero > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ihero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,0) 30%,rgba(20,18,15,.72) 100%)}
-.ihero-txt{position:relative;z-index:1;padding:40px;max-width:640px;color:#fff;display:flex;flex-direction:column;gap:14px}
-.ilogo{height:16px;width:auto;align-self:flex-start;filter:invert(1)}
+/* Bred banner som i PDF:erna: hela bilden, texten under (Jasper 16 nov) */
+.ihero{display:flex;flex-direction:column;gap:28px}
+.ihero > img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;object-position:50% 55%;border-radius:8px}
+.ihero-txt{max-width:720px;color:var(--ink);display:flex;flex-direction:column;gap:14px}
+.ilogo{height:16px;width:auto;align-self:flex-start}
 .ikicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
-.ihero h1{color:#fff;font-size:clamp(34px,5vw,58px)}
+.ihero h1{color:var(--ink);font-size:clamp(34px,5vw,58px)}
 .ihero p{margin:0;font-size:16px;line-height:1.6;max-width:56ch}
 .ibtn{align-self:flex-start;background:#fff;color:#1a1a1a;border-color:#fff;padding:14px 22px}
+.ihero .ibtn{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .iwhy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
 .iwhy div{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--ink);padding-top:14px}
 .ioffer{grid-column:1/-1;margin:0;color:var(--muted);font-size:15px}
@@ -230,7 +231,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
 .isteps .ibtn{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .backintro{align-self:center}
 @media (max-width:900px){ .iwhy,.igods{grid-template-columns:minmax(0,1fr)} .isteps ol{grid-template-columns:minmax(0,1fr) minmax(0,1fr)} .igods img{aspect-ratio:4/3} }
-@media (max-width:767px){ .ihero{min-height:560px} .ihero-txt{padding:24px} .isteps{padding:20px} .isteps ol{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:767px){ .ihero{gap:20px} .ihero > img{aspect-ratio:4/3} .isteps{padding:20px} .isteps ol{grid-template-columns:minmax(0,1fr)} }
 .swhead{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 0;font-family:var(--serif);font-size:19px;font-weight:500}
 .swhead span{font-family:inherit;font-size:14px;color:var(--muted);font-weight:400;align-self:flex-end}
 .ord{color:var(--muted);font-weight:400;font-size:.85em;margin-right:4px}
@@ -314,7 +315,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
 <div class="wrap">
 <section id="intro" class="intro" aria-label="Vikingshöjd-kollektionen">
   <div class="ihero">
-    <img src="img/miljo/verona-sv2.jpg" alt="Verona i ett ljust hem med stora fönster mot grönska">
+    <img src="img/miljo/vikingshojd-banner.jpg" alt="Gardiner i wave-veck framför ett stort fönster mot skogen">
     <div class="ihero-txt">
       <h1>Gardiner sydda för ditt nya hem på Vikingshöjd</h1>
       <p>För ditt nya hem på Vikingshöjd har vi tagit fram en gardinkollektion som sys för hand i vår egen produktion, efter husens ritningar och fönstrens exakta mått. Som köpare får du <b>20 % på tyg och takskena</b><span class="vh-slut"></span>. Vi tar hand om måttagning, sömnad och montering, så att gardinerna hänger på plats när du flyttar in.</p>
@@ -570,7 +571,7 @@ const isMob=()=>matchMedia('(max-width:767px)').matches;
 const FEW={verona:['31','04','22','23','05','32'], carina:['02','01','03','08','05','10']};
 function scrollTop(){ window.scrollTo({top:0}); if(window.parent!==window) try{ window.parent.postMessage({type:'bf-scrolltop'},'*'); }catch(e){} }
 function nextRoomId(){ const rs=roomsFor(state.house), i=rs.findIndex(x=>x.id===state.room); return i>=0&&i<rs.length-1 ? rs[i+1].id : null; }
-function openRoom(id){ try{ if(isMob()){ const st={vh:'room',room:id}; if(history.state&&history.state.vh==='room') history.replaceState(st,''); else history.pushState(st,''); } }catch(e){} state.room=id; state.view='open'; state.sv=0; const sr=state.sel[state.house][id]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } state.mstep='room'; render(); scrollTop(); }
+function openRoom(id){ try{ if(isMob()){ const st={vh:'room',room:id}; if(history.state&&history.state.vh==='room') history.replaceState(st,''); else history.pushState(st,''); } }catch(e){} state.room=id; state.view='open'; state.sv=0; state.mstep='room'; render(); scrollTop(); }
 function houseTotal(){ const h=state.house; return roomsFor(h).reduce((a,r0)=>a+priceOf(roomFor(r0,h),state.sel[h][r0.id]),0)+kudTotal(); }
 function barInfo(){ const tot=houseTotal(), room=state.mstep==='room';
   const label = room ? (nextRoomId()?'Nästa rum →':'Klar · se alla rum') : (SHOP?'Till kassan':'Sammanställning');
@@ -838,7 +839,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.stage){ state.stage=b.dataset.stage; return render(); }
   if(b.dataset.more){ state.more=state.more||{}; state.more[b.dataset.more]=!state.more[b.dataset.more]; return render(); }
   if(b.dataset.h){ state.house=b.dataset.h; state.sv=0; return render(); }
-  if(b.dataset.r){ if(isMob()) return openRoom(b.dataset.r); state.room=b.dataset.r; state.view='open'; state.sv=0; const sr=state.sel[state.house][b.dataset.r]; if(sr && !sr.touched){ sr.touched=true; sr.none=false; } render(); return; }
+  if(b.dataset.r){ if(isMob()) return openRoom(b.dataset.r); state.room=b.dataset.r; state.view='open'; state.sv=0; render(); return; }
   if(b.id==='m-back'){ toList(); return; }
   if(b.id==='m-bar'){ barAction(); return; }
   if(b.dataset.v){ state.view=b.dataset.v; return render(); }
