@@ -332,7 +332,7 @@ p.allwin{margin:4px 0 0;font-size:14px}
     <article><img src="img/miljo/carina-nott.jpg" alt="Carina" loading="lazy"><div><h2>Carina – för sovrummets lugn</h2><p>Carina mörklägger helt utan extra foder. Tyget stänger ute ljuset även under ljusa sommarnätter.</p><small>11 färger · 280 cm</small></div></article>
     <article><img src="img/miljo/laurie-kenza.jpg" alt="Laurie" loading="lazy"><div><h2>Laurie – en skir gardin närmast fönstret</h2><p>Laurie släpper in dagsljuset men håller blickarna ute. Den hänger på en egen, dold skena närmast glaset, med huvudgardinen framför på kvällen.</p><small>24 färger · flamskyddad Trevira CS · 297 cm · tillval</small></div></article>
     
-    <article class="ihera"><img src="img/skena/rum.jpg" alt="Takskena i ett rum" loading="lazy"><div><h2>Takskenan – låt gardinen löpa förbi fönstret</h2><p>Den slimmade aluminiumskenan monteras direkt i taket och fortsätter förbi fönstret, så att gardinen kan dras helt åt sidan. Tyget glider tyst i jämna wave-veck.</p><small>8 × 25 mm · svart</small></div></article>
+    <article class="ihera"><img src="img/skena/rum.jpg" alt="Takskena i ett rum" loading="lazy"><div><h2>Takskenan – låt gardinen löpa förbi fönstret</h2><p>Den slimmade aluminiumskenan monteras direkt i taket och fortsätter förbi fönstret, så att gardinen kan dras helt åt sidan. Tyget glider tyst i jämna wave-veck.</p><small>8 × 25 mm · vit eller svart</small></div></article>
   </div>
   <div class="isteps">
     <h2>Så går det till</h2>
@@ -387,8 +387,8 @@ const kudRows=()=>{ if(!kudOn()) return []; const q=kudSel(); return KUDDAR.filt
 const kudTotal=()=>kudRows().reduce((a,x)=>a+x.sum,0);
 const kOrd=k=>k[0]+k[1]+k[2]+k[3], kPris=k=>dp(k[0])+k[1]+dp(k[2])+k[3];
 const bothK=k=>'<s class="ord">'+fmt(kOrd(k))+'</s> '+fmt(kPris(k));
-const RAILS=[{code:'58',name:'Svart',hex:'#1a1a1a',img:'img/skena/svart.jpg'}];
-const railOf=s=>RAILS.find(x=>x.code===(s.rcolor||'58'))||RAILS[0];
+const RAILS=[{code:'56',name:'Vit',hex:'#f1f1ee',img:'img/skena/lindh-2001.jpg'},{code:'58',name:'Svart',hex:'#1a1a1a',img:'img/skena/lindh-2001.jpg'}]; // Lindh 2001, vit standard (Sam 2026-11-16)
+const railOf=s=>RAILS.find(x=>x.code===(s.rcolor||'56'))||RAILS[0];
 const HOUSES = {
   A:{label:'Hus A · 136 kvm', sub:'Parhus 1–5'},
   B:{label:'Hus B · 131 kvm', sub:'Parhus 1–5'},
@@ -463,8 +463,8 @@ function recommend(s){ if(s.none) return {}; const m=cm(colorOf(s.main,s.color).
 function defaults(h){
   const s={}; const emb=/[?&]embed=/.test(location.search);
   for(const r of roomsFor(h||'A')){
-    s[r.id]= r.sov ? {main:'carina',color:'02',laurie:false,lcolor:'14',band:false,bcolor:'9900',rcolor:'58',none:true}
-                   : {main:'verona',color:'31',laurie:false,lcolor:'14',band:false,bcolor:'9900',rcolor:'58',none:true};
+    s[r.id]= r.sov ? {main:'carina',color:'02',laurie:false,lcolor:'14',band:false,bcolor:'9900',rcolor:'56',none:true}
+                   : {main:'verona',color:'31',laurie:false,lcolor:'14',band:false,bcolor:'9900',rcolor:'56',none:true};
   }
   return s;
 }
@@ -622,7 +622,7 @@ const TINT=.7;
 async function envBitmap(scene,s){
   const showSheer = s.laurie && SC[scene].sheer;
   const synth = s.laurie && !SC[scene].sheer && SC[scene].SP;
-  const key=[scene,s.none?'none':s.main+s.color,(showSheer||synth)?'L'+s.lcolor:'',s.band&&!s.none?'B'+(s.bcolor||''):'','R'+(s.rcolor||'58')].join('|'); if(_out.has(key)) return _out.get(key);
+  const key=[scene,s.none?'none':s.main+s.color,(showSheer||synth)?'L'+s.lcolor:'',s.band&&!s.none?'B'+(s.bcolor||''):'','R'+(s.rcolor||'56')].join('|'); if(_out.has(key)) return _out.get(key);
   const p=(async()=>{
     const {w:W,h:H}=SC[scene];
     if(s.none && !showSheer){ const im=await loadImg(`img/rum/${scene}-none.jpg`); const c=document.createElement('canvas'); c.width=W; c.height=H; c.getContext('2d').drawImage(im,0,0,W,H); return c; }
@@ -767,9 +767,9 @@ function renderDetail(){
     </section>`:''}
     <section class="opt">
       <div class="opt-h"><h3>${(r.sov?3:4)-(BAND_ON?0:1)}. Takskena</h3><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
-      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Smal takskena i aluminium, 8 × 25 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. Priset gäller en skena per fönster, med 20 % Vikingshöjd-rabatt${r.sov?'':'; väljer du till Laurie ingår en andra, dold skena innanför i Lauries pris'}. Färg svart. Takfästen, ändskydd, wave-glid och waveband ingår.</small></span></div>
-      <div class="rails" role="group" aria-label="Skenans finish"${RAILS.length>1?'':' hidden'}>${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'58')===x.code}"><span style="background-image:url('${x.img}')"></span><small>${x.name}</small></button>`).join('')}</div>
-      ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>${railOf(s).name}</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med ändskydd. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
+      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Smal takskena i aluminium, 8 × 25 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. Priset gäller en skena per fönster, med 20 % Vikingshöjd-rabatt${r.sov?'':'; väljer du till Laurie ingår en andra, dold skena innanför i Lauries pris'}. Välj vit eller svart, samma pris. Takfästen, ändskydd, wave-glid och waveband ingår.</small></span></div>
+      <div class="rails" role="group" aria-label="Skenans finish"${RAILS.length>1?'':' hidden'}>${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'56')===x.code}"><span style="background:${x.hex};border:1px solid var(--line)"></span><small>${x.name}</small></button>`).join('')}</div>
+      ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>Lindh 2001-02 vit · 2001-03 svart</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med ändskydd. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
     </section>
     <div class="actions">
       <button class="btn ghost" id="apply-similar">Samma val i alla ${r.sov?'sovrum':'rum utom sovrum'}</button>
