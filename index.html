@@ -471,7 +471,7 @@ function defaults(h){
 }
 let state={house:'A', room:'vardagskok', view:'open', sv:0, sel:{A:defaults('A'),B:defaults('B')}};
 try{ const s=JSON.parse(localStorage.getItem('vh-gardin-v5')||'null'); if(s&&s.sel&&s.sel.A) state={...state,...s}; }catch(e){}
-function ensureHouse(){ const h=state.house; if(!state.sel[h]) state.sel[h]=defaults(h); const d=defaults(h); for(const k in d){ if(!state.sel[h][k]) state.sel[h][k]=d[k]; if(roomById(k)&&roomById(k).sov) state.sel[h][k].laurie=false; if(!BAND_ON) state.sel[h][k].band=false; } if(!roomsFor(h).some(r=>r.id===state.room)) state.room=roomsFor(h)[0].id; }
+function ensureHouse(){ const h=state.house; if(!state.sel[h]) state.sel[h]=defaults(h); const d=defaults(h); for(const k in d){ if(!state.sel[h][k]) state.sel[h][k]=d[k]; if(roomById(k)&&roomById(k).sov) state.sel[h][k].laurie=false; if(!state.sel[h][k].none) state.sel[h][k].laurie=false; if(!BAND_ON) state.sel[h][k].band=false; } if(!roomsFor(h).some(r=>r.id===state.room)) state.room=roomsFor(h)[0].id; }
 const save=()=>{ try{localStorage.setItem('vh-gardin-v5',JSON.stringify(state))}catch(e){} };
 
 function ordOf(r,s){
@@ -724,35 +724,23 @@ function renderDetail(){
         const sum=lines.reduce((x,l)=>x+l[1],0), sumd=lines.reduce((x,l)=>x+l[2],0);
         if(mob && !mo.build) return `<section class="build compact"><button class="buildtoggle" data-more="build" aria-expanded="false"><span>Totalt för rummet</span><span class="pr">${sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':''}<b>${fmt(sumd)}</b></span><small>Visa vad som ingår ▾</small></button></section>`;
         return `<section class="build" aria-label="Ditt val för rummet"><div class="opt-h"><h3>Ditt val för ${r.name.toLowerCase()}</h3></div>${sum>sumd?'<p class="note">Du sparar '+fmt(sum-sumd)+' med 20 % Vikingshöjd-rabatt på tyg och takskena.</p>':''}${lines.length?'<ul class="buildlist">'+lines.map(l=>'<li><span>'+l[0]+'</span><span class="pr">'+(l[1]>l[2]?'<s class="ord">'+fmt(l[1])+'</s> ':'')+fmt(l[2])+'</span></li>').join('')+'</ul><div class="buildtot"><span>Totalt</span><span class="pr">'+(sum>sumd?'<s class="ord">'+fmt(sum)+'</s> ':'')+fmt(sumd)+'</span></div>':'<p class="note">Inget valt ännu. Välj Verona (standard) eller Carina nedan, så byggs priset på allteftersom du lägger till.</p>'}${mob?'<button class="buildtoggle less" data-more="build" aria-expanded="true"><small>Dölj detaljer ▴</small></button>':''}</section>`; })()}
-    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>'+(BAND_ON?'Färg, '+(r.sov?'':'Laurie, ')+'band och skena':(r.sov?'Färg och skena':'Färg, Laurie och skena'))+'</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
+    ${mob?'<button class="mfler" data-more="fler" aria-expanded="'+(!!mo.fler)+'"><span><b>'+(mo.fler?'Färre val':'Fler val')+'</b><small>'+(BAND_ON?'Färg, '+(r.sov?'':'Laurie, ')+'band och skena':(r.sov?'Färg och skena':'Tyg, färg och skena'))+'</small></span><span aria-hidden="true">'+(mo.fler?'▴':'▾')+'</span></button>':''}
     ${(()=>{ if(mob && !mo.fler) return ''; return `
     <section class="opt">
-      <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
+      <div class="opt-h"><h3>1. Välj gardin</h3><span class="pr">${bothK(s.none&&s.laurie&&!r.sov?r.lk:r.k)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
       <p class="note mhide">Priset gäller måttsydd gardin med wave-veck, en takskena, montering och uppsättning. Som boende på Vikingshöjd får du 20 % rabatt på tyg och takskena; överstruket är ordinarie pris.</p>
       ${s.none?'':`<ul class="buildlist pricebreak"><li><span>Tyg, ${String(r.k[4]).replace('.',',')} m</span><span class="pr"><s class="ord">${fmt(r.k[0])}</s> ${fmt(dp(r.k[0]))}</span></li><li><span>Sömnad med wave-veck, ${r.k[5]} våder à ${fmt(SY_VAD)}</span><span class="pr">${fmt(r.k[1])}</span></li><li><span>Takskena</span><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}</span></li><li><span>Montering och installation</span><span class="pr">${fmt(r.k[3])}</span></li></ul>`}
       ${r.ws.length>1?`<p class="note mhide">Samma tyg och färg på alla ${r.ws.length} fönster: ${r.ws.map(w=>w.part).join(', ')}.</p>`:''}
       ${r.sov?`<p class="note">Sovrummen får Carina, som mörklägger helt utan foder, så rummet blir mörkt även en ljus natt i juni. Sydd med wave-veck.</p>`:''}
       <div class="tabs" role="group" aria-label="Tyg">
         ${fabs.map(f=>`<button class="tab" id="fab-${f}" data-fab="${f}" aria-pressed="${!s.none&&s.main===f}"><b>${DATA[f].name}${(f==='verona'||r.sov)?' · standard':''}</b><small>${DATA[f].desc}</small></button>`).join('')}
-        <button class="tab" id="fab-none" data-fab="none" aria-pressed="${s.none}"><b>Ingen gardin</b><small>Inget i det här rummet</small></button>
+        ${r.sov?'':`<button class="tab" id="fab-laurie" data-fab="laurie" aria-pressed="${!!(s.none&&s.laurie)}"><b>Laurie</b><small>${DATA.laurie.desc}</small></button>`}
+        <button class="tab" id="fab-none" data-fab="none" aria-pressed="${!!(s.none&&!s.laurie)}"><b>Ingen gardin</b><small>Inget i det här rummet</small></button>
       </div>
-      ${s.none?'':swatchGrid(s.main,s.color,'main')}
+      ${s.none?(s.laurie&&!r.sov?swatchGrid('laurie',s.lcolor,'laurie'):''):swatchGrid(s.main,s.color,'main')}
       ${s.none?'':`<div class="morerow">${plusBtn('fabric','tyget i verkligheten')}<span><b>Se tyget i verkligheten</b><small>Närbild på ${DATA[s.main].name} ${colorOf(s.main,s.color).name} och bilder från riktiga hem.</small></span></div>
       ${moreBox('fabric',`${fabricGallery(s.main,s.color)}<p class="note">Fotografier av tyget. Vi lämnar gärna tygprov så att du kan se färgen i ditt eget ljus.</p>`)}`}
     </section>
-    ${r.sov?'':`<section class="opt">
-      <div class="morerow">
-        ${plusBtn('laurie','vad tillvalet innebär')}
-        <label class="check" for="chk-laurie"><input type="checkbox" id="chk-laurie" ${s.laurie?'checked':''}>
-          <span class="t"><b>2. Tillval: skir innergardin Laurie</b><small>Släpper in dagsljuset men håller blickarna ute.</small></span>
-          <span class="p">+ ${bothK(r.lk)}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></label>
-      </div>
-      ${moreBox('laurie',`<p>Laurie hänger på en egen skena närmast glaset. Dragen på dagen släpper den in dagsljuset men håller blickarna ute, och på kvällen drar du huvudgardinen framför. Tyget är flamskyddat Trevira CS i 297 cm bredd, så gardinen sys utan skarvar.</p>
-        <p class="note">I priset ingår tyg, sömnad med wave-veck, en extra takskena och montering.</p>${fabricGallery('laurie',s.lcolor)}`)}
-      ${s.laurie&&!s.none?`<p class="note">Brittfurn Colour Match har valt ut tre färger på Laurie som passar ${DATA[s.main].name} ${colorOf(s.main,s.color).name}.</p>`+swatchGrid('laurie',s.lcolor,'laurie',sheerTop(s).map(x=>x.c)):''}
-      ${(()=>{ return ''; const R=recommend(s), rc=R.sheer; if(!rc||!s.laurie) return ''; const on=s.lcolor===rc.c.code, cl=cm(rc.c.lab);
-        return `<div class="reco"><span class="recodot" style="background-image:url('${rc.c.img}');background-color:${rc.c.hex}"></span><span><b>Brittfurn Colour Match föreslår Laurie ${rc.c.name}</b><small>${rc.kat} till ${DATA[s.main].name} ${colorOf(s.main,s.color).name}: samma ${cl.und} underton${cl.L>R.m.L?' och en ljusare ton som låter dagsljuset flöda':''}.</small></span>${on&&s.laurie?'<span class="recook">Vald</span>':'<button class="btn ghost" id="use-reco-sheer" data-code="'+rc.c.code+'">Välj</button>'}</div>`; })()}
-    </section>`}
     ${BAND_ON?`<section class="opt">
       <div class="morerow">
         ${plusBtn('band','vad tillvalet innebär')}
@@ -767,8 +755,8 @@ function renderDetail(){
         <p class="note">I priset ingår två band à 280 cm och påsyddnad per fönster${r.ws.length>1?' ('+r.ws.length+' fönster)':''}.</p>`)}
     </section>`:''}
     <section class="opt">
-      <div class="opt-h"><h3>${(r.sov?3:4)-(BAND_ON?0:1)}. Takskena</h3><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
-      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Smal takskena i aluminium, 8 × 25 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. Priset gäller en skena per fönster, med 20 % Vikingshöjd-rabatt${r.sov?'':'; väljer du till Laurie ingår en andra, dold skena innanför i Lauries pris'}. Välj vit eller svart, samma pris. Takfästen, ändskydd, wave-glid och waveband ingår.</small></span></div>
+      <div class="opt-h"><h3>${2+(BAND_ON?1:0)}. Takskena</h3><span class="pr"><s class="ord">${fmt(r.k[2])}</s> ${fmt(dp(r.k[2]))}${r.ws.length>1?' för '+r.ws.length+' fönster':''}</span></div>
+      <div class="morerow">${plusBtn('rail','hur skenan ser ut')}<span><b>Smal takskena i aluminium, 8 × 25 mm</b><small>Monteras direkt i taket och går förbi fönstret, så att gardinerna kan dras helt åt sidan och glaset blir fritt. Gardinen glider tyst i jämna wave-veck. Priset gäller en skena per fönster, med 20 % Vikingshöjd-rabatt. Välj vit eller svart, samma pris. Takfästen, ändskydd, wave-glid och waveband ingår.</small></span></div>
       <div class="rails" role="group" aria-label="Skenans finish"${RAILS.length>1?'':' hidden'}>${RAILS.map(x=>`<button class="railsw" id="rail-${x.code}" data-rail="${x.code}" aria-pressed="${(s.rcolor||'56')===x.code}"><span style="background:${x.hex};border:1px solid var(--line)"></span><small>${x.name}</small></button>`).join('')}</div>
       ${moreBox('rail',`<div class="gal"><button class="galimg big" data-zoom="${railOf(s).img}" aria-label="Förstora skenan"><img src="${railOf(s).img}" alt="Takskena i ${railOf(s).name}" loading="lazy"><span>Lindh 2001-02 vit · 2001-03 svart</span></button><button class="galimg" data-zoom="img/skena/rum.jpg" aria-label="Förstora rumsbild"><img src="img/skena/rum.jpg" alt="Takskena i ett helt rum" loading="lazy"></button></div><p class="note">Skenan monteras i taket med diskreta takfästen och avslutas med ändskydd. Måttanpassas för varje fönster. Monteringen ingår.</p>`)}
     </section>
@@ -844,7 +832,7 @@ document.addEventListener('click',e=>{
   if(b.id==='m-bar'){ barAction(); return; }
   if(b.dataset.v){ state.view=b.dataset.v; return render(); }
   if(b.dataset.sv){ state.sv=+b.dataset.sv; return render(); }
-  if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
+  if(b.classList.contains('tab')){ const f=b.dataset.fab; if(f==='laurie'){ s.none=true; s.laurie=true; s.touched=true; state.view='sheer'; return render(); } s.laurie=false; if(f==='none'){ s.none=true; s.touched=true; } else { if(s.main!==f){ s.main=f; s.color=DATA[f].colors.find(c=>c.code===DATA[f].def)?.code||DATA[f].colors[0].code; } s.none=false; s.touched=true; } return render(); }
   if(b.dataset.cmp){ const r0=roomById(state.room), c=compareSet(r0,s)[+b.dataset.cmp];
     Object.assign(s,{none:!!c.s.none,main:c.s.main,color:c.s.color,laurie:c.s.laurie}); if(c.s.laurie) s.lcolor=c.s.lcolor; if(typeof c.s.band==='boolean' && !r0.sov) s.band=BAND_ON&&c.s.band; state.view=c.view; return render(); }
   if(b.classList.contains('sw')){ if(b.dataset.kind==='main'){ s.color=b.dataset.code; if(s.laurie) fitSheer(s); state.view=s.laurie?'sheer':'closed'; } else { s.lcolor=b.dataset.code; state.view='sheer'; } return render(); }
